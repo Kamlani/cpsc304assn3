@@ -1,0 +1,28 @@
+#labels SVN,HowTo
+Hey guys I've got us set up on Google Code.
+
+    * Download tortoise SVN:
+
+
+http://tortoisesvn.tigris.org/
+
+    * Restart
+
+
+    * Make a folder in your eclipse workspace called, "cpsc304assn3"
+    * Right click the folder and go to SVN Checkout
+    * Here is the URL: https://cpsc304assn3.googlecode.com/svn/trunk/
+    * the username is your Google username
+    * the password is eq6vv3Dz5BE8
+
+
+Do not regenerate the pass.
+
+    * Once all the files have been grabbed from google code, you will see a green check mark on your cpsc304assn3 folder.
+
+
+
+Enjoy
+
+
+Matt
