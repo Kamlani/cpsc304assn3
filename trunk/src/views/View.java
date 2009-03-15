@@ -34,10 +34,6 @@ public class View {
 		
 	}
 	
-	public void setVisible(boolean visible) {
-		mainContainer.setVisible(visible);		
-	}
-	
 	public String getViewName() {
 		return viewName;		
 	}

@@ -4,20 +4,20 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class MainView {
+public final class MainView {
 	
-	private JFrame mainFrame;
-	private Label title;
+	private static JFrame mainFrame;
+	private static Label title;
 	
-	private View currentView;
-	private View managerView;
-	private View clerkView;
-	private View customerView;
+	private static View currentView;
+	private static View managerView;
+	private static View clerkView;
+	private static View customerView;
 	
-	private Panel buttonContainer;
-	private Button button1;
-	private Button button2;
-	private Button button3;
+	private static Panel buttonContainer;
+	private static Button button1;
+	private static Button button2;
+	private static Button button3;
 	
 	public MainView () {
 		
@@ -28,14 +28,14 @@ public class MainView {
 		
 	}
 	
-	public void setFrame (String text, int width, int height) {
+	private static void setFrame (String text, int width, int height) {
 		mainFrame = new JFrame(text);		
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(width, height);
 		mainFrame.setVisible(true);	
 	}
 	
-	public void addTitle (String text) {
+	private static void addTitle (String text) {
 		title = new Label(text);
 		title.setBackground(new Color(64,64,64));
 		title.setForeground(new Color(255,255,255));
@@ -43,7 +43,7 @@ public class MainView {
 		mainFrame.add(title, BorderLayout.NORTH);
 	}
 	
-	public void addButtons (String text1, String text2, String text3) {
+	private void addButtons (String text1, String text2, String text3) {
 		
 		buttonContainer = new Panel();
 		buttonContainer.setBackground(new Color(128,128,128));
@@ -65,17 +65,18 @@ public class MainView {
 		mainFrame.add(buttonContainer, BorderLayout.WEST);		
 	}
 	
-	public void addViews () {
+	public static void addViews () {
 		
 		managerView = new ManagerView("Manager");
 		clerkView = new ClerkView("Clerk");
 		customerView = new CustomerView("Customer");
 		currentView = managerView;
 		mainFrame.add(currentView.getView());
+		mainFrame.validate();
 		
 	}
 	
-	public void switchView (int view, String title) {
+	public static void switchView (int view, String title) {
 		if (currentView.getViewName() != title) {
 			mainFrame.remove(currentView.getView());
 			
