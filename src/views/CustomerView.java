@@ -27,7 +27,7 @@ public class CustomerView extends View {
 		//The title in the main Panel returned from getContainer()
 		Label label = new Label("This is an example of adding a Label Component to Panel = ManagerView.getContainer() using BorderLayout.NORTH");
 		label.setFont(new Font("Arial", Font.BOLD, 12));
-		getContainer().add(label, BorderLayout.NORTH); //Only one component can be NORTH in a BorderLayout
+		this.getContainer().add(label, BorderLayout.NORTH); //Only one component can be NORTH in a BorderLayout
 		
 		//Buttons in the main Panel returned from getContainer() with a new layout BoxLayout
 		Panel buttonContainer = new Panel();
@@ -50,18 +50,18 @@ public class CustomerView extends View {
 		Dimension fillerSize = new Dimension(Short.MAX_VALUE,32);
 		buttonContainer.add(new Box.Filler(fillerSize, fillerSize, fillerSize));
 		
-		getContainer().add(buttonContainer, BorderLayout.SOUTH);//Only one component can be SOUTH in a BorderLayout
+		this.getContainer().add(buttonContainer, BorderLayout.SOUTH);//Only one component can be SOUTH in a BorderLayout
 		
 
 		//A new Panel that takes up the center of the border layout so we can add more components with a different layout
 		Panel newContainer = new Panel();
-		newContainer.setBackground(new Color(64,64,128));
+		newContainer.setBackground(new Color(64,128,128));
 		
 		//Potential new layout for the center Panel
 		//Default will inherit BorderLayout from Parent container which is container in View.java
 		//newContainer.setLayout(new BoxLayout(buttonContainer,BoxLayout.X_AXIS));
 		
-		getContainer().add(newContainer, BorderLayout.CENTER);
+		this.getContainer().add(newContainer, BorderLayout.CENTER);
 		
 		//The title in the newContainer Panel
 		Label label2 = new Label("This is an example of adding a Label Component to a Panel nested in Panel = ManagerView.getContainer()");

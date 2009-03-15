@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 /*
@@ -24,50 +25,24 @@ public class ManagerView extends View {
 	
 	private void init() {
 		
-		//The title in the main Panel returned from getContainer()
-		Label label = new Label("This is an example of adding a Label Component to Panel = ManagerView.getContainer() using BorderLayout.NORTH");
-		label.setFont(new Font("Arial", Font.BOLD, 12));
-		getContainer().add(label, BorderLayout.NORTH); //Only one component can be NORTH in a BorderLayout
+//EXAMPLE RESULT SET
 		
-		//Buttons in the main Panel returned from getContainer() with a new layout BoxLayout
-		Panel buttonContainer = new Panel();
-		buttonContainer.setBackground(new Color(128,128,128));
-		buttonContainer.setLayout(new BoxLayout(buttonContainer,BoxLayout.X_AXIS));
+		int rows = 5;
+		int cols = 3;
+		int cellWidth = 200;
+		String header = "Example Result Set:";
+		String[] titles = {"Result Col 1","Result Col 2","Result Col 3"};
 		
-		Button button1 = new Button("Button 1");
-		Button button2 = new Button("Button 2");
-		Button button3 = new Button("Button 3");
+		String[][] results = new String[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				results[i][j] = "Example Result: " + i + " , " + j;
+			}
+		}
 		
-		buttonContainer.add(button1);
-		buttonContainer.add(button2);
-		buttonContainer.add(button3);
+		ResultSet theResults = new ResultSet(header,titles,results,cellWidth);
 		
-		//The title in the newContainer Panel
-		Label label3 = new Label("Buttons added to Panel = ManagerView.getContainer() using BorderLayout.SOUTH");
-		label3.setFont(new Font("Arial", Font.BOLD, 12));
-		buttonContainer.add(label3);
-		
-		Dimension fillerSize = new Dimension(Short.MAX_VALUE,32);
-		buttonContainer.add(new Box.Filler(fillerSize, fillerSize, fillerSize));
-		
-		getContainer().add(buttonContainer, BorderLayout.SOUTH);//Only one component can be SOUTH in a BorderLayout
-		
-
-		//A new Panel that takes up the center of the border layout so we can add more components with a different layout
-		Panel newContainer = new Panel();
-		newContainer.setBackground(new Color(128,64,64));
-		
-		//Potential new layout for the center Panel
-		//Default will inherit BorderLayout from Parent container which is container in View.java
-		//newContainer.setLayout(new BoxLayout(buttonContainer,BoxLayout.X_AXIS));
-		
-		getContainer().add(newContainer, BorderLayout.CENTER);
-		
-		//The title in the newContainer Panel
-		Label label2 = new Label("This is an example of adding a Label Component to a Panel nested in Panel = ManagerView.getContainer()");
-		label2.setFont(new Font("Arial", Font.BOLD, 12));
-		newContainer.add(label2, BorderLayout.CENTER);
-
+		this.getContainer().add(theResults.getContainer(), BorderLayout.WEST);
 	}
 	
 	
