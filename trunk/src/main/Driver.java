@@ -10,8 +10,6 @@ public class Driver {
 	public static void main(String[] args) {
 		
 		MainView theView = new MainView();
-		
-		System.out.println("Working");
 
 	}
 
