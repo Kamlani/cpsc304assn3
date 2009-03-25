@@ -13,9 +13,10 @@ import javax.swing.*;
 
 public class CustomerView extends View {
 
-	public CustomerView (String title) {
+	public CustomerView (String title, MainView parent) {
 		
 		//default setup methods defined in View.java
+		setParent(parent);
 		setContainer();
 		setTitle(title);
 		

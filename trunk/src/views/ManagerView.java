@@ -14,9 +14,10 @@ import javax.swing.*;
 
 public class ManagerView extends View {
 
-        public ManagerView (String title) {
+        public ManagerView (String title, MainView parent) {
                
                 //default setup methods defined in View.java
+        		setParent(parent);
                 setContainer();
                 setTitle(title);
                
