@@ -1,7 +1,12 @@
 package views;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
+
+import views.MainView.button1Action;
 
 /*
  * Use getContainer(), or this.getContainer() to get the main container for the view
@@ -11,6 +16,22 @@ import javax.swing.*;
 */
 
 public class ClerkView extends View {
+	
+	private Panel purchasePanel;
+	private Panel returnPanel;
+	
+	private int totalPurchaseRows;
+	private int purchaseRows;
+	private Panel[] purchaseRowPanel;
+	private JFormattedTextField[] purchaseText;
+	private JFormattedTextField[] purchaseQuantity;
+	private Button purchaseAdd;
+	private Button purchaseSubmit;
+	
+	private JFormattedTextField[] returnText;
+	private JFormattedTextField[] returnQuantity;
+	
+	private Button returnSubmit;
 
 	public ClerkView (String title) {
 		
@@ -18,55 +39,151 @@ public class ClerkView extends View {
 		setContainer();
 		setTitle(title);
 		
+		totalPurchaseRows = 8;
+		
+		purchaseRows = 1;
+		
+		purchaseRowPanel = new Panel[totalPurchaseRows];
+		purchaseText = new JFormattedTextField[totalPurchaseRows];
+		purchaseQuantity = new JFormattedTextField[totalPurchaseRows];
+		
 		init();
 	}
 	
 	private void init() {
 		
-		//The title in the main Panel returned from getContainer()
-		Label label = new Label("This is an example of adding a Label Component to Panel = ManagerView.getContainer() using BorderLayout.NORTH");
-		label.setFont(new Font("Arial", Font.BOLD, 12));
-		this.getContainer().add(label, BorderLayout.NORTH); //Only one component can be NORTH in a BorderLayout
+		createPurchasePanel();
 		
-		//Buttons in the main Panel returned from getContainer() with a new layout BoxLayout
-		Panel buttonContainer = new Panel();
-		buttonContainer.setBackground(new Color(128,128,128));
-		buttonContainer.setLayout(new BoxLayout(buttonContainer,BoxLayout.X_AXIS));
+		//returnSubmit = new Button("Submit Return");
 		
-		Button button1 = new Button("Button 1");
-		Button button2 = new Button("Button 2");
-		Button button3 = new Button("Button 3");
+	}
+	
+	private void createPurchasePanel () {
 		
-		buttonContainer.add(button1);
-		buttonContainer.add(button2);
-		buttonContainer.add(button3);
+		//FILLS for GRID
 		
-		//The title in the newContainer Panel
-		Label label3 = new Label("Buttons added to Panel = ManagerView.getContainer() using BorderLayout.SOUTH");
-		label3.setFont(new Font("Arial", Font.BOLD, 12));
-		buttonContainer.add(label3);
+		Dimension filler = new Dimension(32,32);
 		
-		Dimension fillerSize = new Dimension(Short.MAX_VALUE,32);
-		buttonContainer.add(new Box.Filler(fillerSize, fillerSize, fillerSize));
+		//SET UP PANELS FOR CLERK
 		
-		this.getContainer().add(buttonContainer, BorderLayout.SOUTH);//Only one component can be SOUTH in a BorderLayout
+		purchasePanel = new Panel();
+		purchasePanel.setBackground(bg3);
+		purchasePanel.setLayout(new GridLayout(   totalPurchaseRows+2   ,1));
+		purchasePanel.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
+		this.getContainer().add(purchasePanel, BorderLayout.NORTH);
 		
-
-		//A new Panel that takes up the center of the border layout so we can add more components with a different layout
-		Panel newContainer = new Panel();
-		newContainer.setBackground(new Color(128,64,128));
+		//label for Purchase Panel
+		Label purchaseLabel = new Label("Purchase: ");
+		purchaseLabel.setFont(font1);
+		purchasePanel.add(purchaseLabel);
 		
-		//Potential new layout for the center Panel
-		//Default will inherit BorderLayout from Parent container which is container in View.java
-		//newContainer.setLayout(new BoxLayout(buttonContainer,BoxLayout.X_AXIS));
+		createPurchaseRows();
+		setPurchaseRowVisible(0, true);
 		
-		this.getContainer().add(newContainer, BorderLayout.CENTER);
+		Panel purchaseSubmitPanel = new Panel();
+		purchaseSubmitPanel.setLayout(new GridLayout(1,6));
+			
+			purchaseSubmitPanel.add(new Box.Filler(filler, filler, filler));
+			purchaseSubmitPanel.add(new Box.Filler(filler, filler, filler));
+			purchaseSubmitPanel.add(new Box.Filler(filler, filler, filler));
+			
+			purchaseAdd = new Button("Add Item");
+			purchaseAdd.addActionListener(new purchaseAddAction());
+			purchaseSubmitPanel.add(purchaseAdd);
+			
+			purchaseAdd = new Button("Remove Last Item");
+			purchaseAdd.addActionListener(new purchaseRemoveAction());
+			purchaseSubmitPanel.add(purchaseAdd);
+			
+			purchaseSubmit = new Button("Submit Purchase");
+			purchaseSubmitPanel.add(purchaseSubmit);		
 		
-		//The title in the newContainer Panel
-		Label label2 = new Label("This is an example of adding a Label Component to a Panel nested in Panel = ManagerView.getContainer()");
-		label2.setFont(new Font("Arial", Font.BOLD, 12));
-		newContainer.add(label2, BorderLayout.CENTER);
+		purchasePanel.add(purchaseSubmitPanel);
 		
+		
+	}//CREATE PURCHASE PANEL
+	
+	
+	
+	private void createPurchaseRows () {
+		
+		Dimension filler = new Dimension(32,32);
+		
+		for (int row = 0; row < totalPurchaseRows; row++) {
+		
+			purchaseRowPanel[row] = new Panel(new GridLayout(1,3));
+			
+			//SUB PANEL 1
+			
+			Panel purchaseSubPanel1 = new Panel();
+			purchaseSubPanel1.setLayout(new GridLayout(1,3));
+					
+			Label purchaseItemLabel = new Label("Item " + (row+1) + ": ");
+			purchaseItemLabel.setFont(font1);
+			purchaseSubPanel1.add(purchaseItemLabel);
+			
+			purchaseText[row] = new JFormattedTextField();
+			purchaseText[row].setFont(font1);
+			purchaseText[row].setEditable(true);
+			purchaseSubPanel1.add(purchaseText[row]);
+			
+			purchaseSubPanel1.add(new Box.Filler(filler, filler, filler));
+			purchaseRowPanel[row].add(purchaseSubPanel1);
+			
+			//SUB PANEL 2
+		
+			Panel purchaseSubPanel2 = new Panel();
+			purchaseSubPanel2.setLayout(new GridLayout(1,3));
+					
+			Label purchaseQuantityLabel = new Label("Quantity: ");
+			purchaseQuantityLabel.setFont(font1);
+			purchaseSubPanel2.add(purchaseQuantityLabel);
+			
+			purchaseQuantity[row] = new JFormattedTextField();
+			purchaseQuantity[row].setFont(font1);
+			purchaseQuantity[row].setSize(8, 32);
+			purchaseQuantity[row].setEditable(true);
+			purchaseSubPanel2.add(purchaseQuantity[row]);
+			
+			purchaseSubPanel2.add(new Box.Filler(filler, filler, filler));
+			purchaseRowPanel[row].add(purchaseSubPanel2);
+			
+			purchaseRowPanel[row].setVisible(false);
+			purchasePanel.add(purchaseRowPanel[row]);
+		}//for
+		
+	}//CREATE PURCHASE ROWS
+	
+	private void setPurchaseRowVisible (int row, boolean vis) {
+		purchaseRowPanel[row].setVisible(vis);
+	}//SET PURCHASE ROW VISIBILE
+	
+	
+	
+	
+	
+	
+	
+	
+	//LISTENERS
+	
+	
+	public class purchaseAddAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			if (purchaseRows < totalPurchaseRows) {
+				setPurchaseRowVisible(purchaseRows, true);
+				purchaseRows++;
+			}
+        }
+	}
+	
+	public class purchaseRemoveAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			if (purchaseRows > 1) {
+				purchaseRows--;
+				setPurchaseRowVisible(purchaseRows, false);
+			}
+        }
 	}
 	
 	
