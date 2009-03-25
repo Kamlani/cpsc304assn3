@@ -8,9 +8,21 @@ public class View {
 	private Panel container;
 	private String viewName;
 	
+	public Color bg1;
+	public Color bg2;
+	public Color bg3;
+	
+	public Font font1;
+	
 	public View () {}
 	
 	public void setContainer() {
+		
+		bg1 = new Color(164,164,164);
+        bg2 = new Color(196,196,196);
+        bg3 = new Color(223,223,223);
+        
+        font1 = new Font("Arial", Font.BOLD, 14);
 		
 		mainContainer = new Panel();
 		mainContainer.setLayout(new BorderLayout());
