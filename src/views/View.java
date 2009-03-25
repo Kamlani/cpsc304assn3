@@ -4,6 +4,10 @@ import java.awt.*;
 
 public class View {
 	
+	private MainView thisParent;
+	
+	private String thisController;
+	
 	private Panel mainContainer;
 	private Panel container;
 	private String viewName;
@@ -15,6 +19,14 @@ public class View {
 	public Font font1;
 	
 	public View () {}
+	
+	public void reInit (String title, MainView parent) {
+		
+		//default setup methods defined in View.java
+		setParent(parent);
+		setContainer();
+		setTitle(title);
+	}
 	
 	public void setContainer() {
 		
@@ -42,9 +54,22 @@ public class View {
 		label.setFont(new Font("Arial", Font.BOLD, 24));
 		mainContainer.add(label, BorderLayout.NORTH);
 		
-		mainContainer.add(container, BorderLayout.CENTER);
-		
+		mainContainer.add(container, BorderLayout.CENTER);	
 	}
+	
+	public void setParent(MainView parent) {
+		thisParent = parent;		
+	}
+	
+	//ONLY USED BY RESULTS VIEWS
+	
+	public void showResults (String header, String[] titles, String[][] results, int cellWidth) {
+        
+		ResultSet theResults = new ResultSet(header,titles,results,cellWidth);
+        this.getContainer().add(theResults.getContainer(), BorderLayout.WEST);
+	}
+
+	//GETTERS
 	
 	public String getViewName() {
 		return viewName;		
@@ -56,5 +81,14 @@ public class View {
 	
 	public Panel getView() {
 		return mainContainer;		
+	}
+
+	public MainView getParent() {
+		return thisParent;		
+	}
+	
+	
+	public void clear () {
+		this.getContainer().removeAll();
 	}
 }

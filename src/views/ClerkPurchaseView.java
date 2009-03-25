@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import views.MainView.button1Action;
-
 /*
  * Use getContainer(), or this.getContainer() to get the main container for the view
  * add components to the Panel returned from getContainer()
@@ -15,10 +13,9 @@ import views.MainView.button1Action;
  * For more complicated layouts, nest an element inside the Panel returned from getContainer()
 */
 
-public class ClerkView extends View {
+public class ClerkPurchaseView extends View {
 	
 	private Panel purchasePanel;
-	private Panel returnPanel;
 	
 	private int totalPurchaseRows;
 	private int purchaseRows;
@@ -27,19 +24,16 @@ public class ClerkView extends View {
 	private JFormattedTextField[] purchaseQuantity;
 	private Button purchaseAdd;
 	private Button purchaseSubmit;
-	
-	private JFormattedTextField[] returnText;
-	private JFormattedTextField[] returnQuantity;
-	
-	private Button returnSubmit;
 
-	public ClerkView (String title) {
+	public ClerkPurchaseView (String title, MainView parent) {
 		
 		//default setup methods defined in View.java
+		setParent(parent);
+
 		setContainer();
 		setTitle(title);
 		
-		totalPurchaseRows = 8;
+		totalPurchaseRows = 16;
 		
 		purchaseRows = 1;
 		
@@ -70,10 +64,10 @@ public class ClerkView extends View {
 		purchasePanel.setBackground(bg3);
 		purchasePanel.setLayout(new GridLayout(   totalPurchaseRows+2   ,1));
 		purchasePanel.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
-		this.getContainer().add(purchasePanel, BorderLayout.NORTH);
+		this.getContainer().add(purchasePanel, BorderLayout.CENTER);
 		
 		//label for Purchase Panel
-		Label purchaseLabel = new Label("Purchase: ");
+		Label purchaseLabel = new Label("Purchase Items: ");
 		purchaseLabel.setFont(font1);
 		purchasePanel.add(purchaseLabel);
 		
@@ -96,6 +90,7 @@ public class ClerkView extends View {
 			purchaseSubmitPanel.add(purchaseAdd);
 			
 			purchaseSubmit = new Button("Submit Purchase");
+			purchaseSubmit.addActionListener(new submitPurchaseAction());
 			purchaseSubmitPanel.add(purchaseSubmit);		
 		
 		purchasePanel.add(purchaseSubmitPanel);
@@ -113,6 +108,11 @@ public class ClerkView extends View {
 		
 			purchaseRowPanel[row] = new Panel(new GridLayout(1,3));
 			
+			 if (row % 2 == 0)
+				 purchaseRowPanel[row].setBackground(bg2);
+			 else
+				 purchaseRowPanel[row].setBackground(bg3);
+        	
 			//SUB PANEL 1
 			
 			Panel purchaseSubPanel1 = new Panel();
@@ -131,6 +131,7 @@ public class ClerkView extends View {
 			purchaseRowPanel[row].add(purchaseSubPanel1);
 			
 			//SUB PANEL 2
+			
 		
 			Panel purchaseSubPanel2 = new Panel();
 			purchaseSubPanel2.setLayout(new GridLayout(1,3));
@@ -154,15 +155,16 @@ public class ClerkView extends View {
 		
 	}//CREATE PURCHASE ROWS
 	
+	private void clearRow(int row) {
+		
+		purchaseText[row].setText(" ");
+		purchaseQuantity[row].setText(" ");
+		
+	} //CLEAR ROW
+
 	private void setPurchaseRowVisible (int row, boolean vis) {
 		purchaseRowPanel[row].setVisible(vis);
 	}//SET PURCHASE ROW VISIBILE
-	
-	
-	
-	
-	
-	
 	
 	
 	//LISTENERS
@@ -181,9 +183,20 @@ public class ClerkView extends View {
 		public void actionPerformed(ActionEvent e) {
 			if (purchaseRows > 1) {
 				purchaseRows--;
+				clearRow(purchaseRows);
 				setPurchaseRowVisible(purchaseRows, false);
 			}
         }
+	}
+	
+	public class submitPurchaseAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			showResults();
+        }
+	}
+	
+	private void showResults() {
+		this.getParent().showResultsView(3);
 	}
 	
 	
