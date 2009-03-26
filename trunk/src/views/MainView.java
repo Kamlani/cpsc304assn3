@@ -35,31 +35,42 @@ public final class MainView {
 		
 		setFrame("CPSC 304 Assn3 Main View", 960, 600);		
 		addTitle("CPSC 304 Assn3 Main View");
-		
-		numViews = 5;
-		viewTitles = new String[numViews];
-		views = new View[numViews];
-		
-		viewTitles[0] = "ManagerView";
-		viewTitles[1] = "CustomerOnlineView";
-		viewTitles[2] = "CustomerCheckoutView";
-		viewTitles[3] = "CustomerReceiptView: ";
-		viewTitles[4] = "CustomerView: ";
-		
-		buttons = new Button[numViews];
-		buttonText = new String[numViews];
-		buttonText[0] = "Manager";
-		buttonText[1] = "Customer Online";
-		buttonText[2] = "Customer Cart";
-		buttonText[3] = "Customer Receipt";
-		buttonText[4] = "Customer";
-		
+
 		totalCartItems = 16;
 		cart = new Vector<Object>();
 		
-		addButtons();
-		addViews();
+		numViews = 6;
+		viewTitles = new String[numViews];
+		views = new View[numViews];
+		buttons = new Button[numViews];
+		buttonText = new String[numViews];
 		
+		viewTitles[0] = "LoginView: ";
+		viewTitles[1] = "ManagerView: ";
+		viewTitles[2] = "CustomerOnlineView: ";
+		viewTitles[3] = "CustomerCheckoutView: ";
+		viewTitles[4] = "CustomerReceiptView: ";
+		viewTitles[5] = "CustomerView: ";
+		
+		views[0] = new LoginView(viewTitles[0], thisMainView);
+		views[1] = new ManagerView(viewTitles[1], thisMainView);
+		views[2] = new CustomerOnlineView(viewTitles[2], thisMainView);
+		views[3] = new CustomerCheckoutView(viewTitles[3], thisMainView);
+		views[4] = new CustomerReceiptView(viewTitles[4], thisMainView);
+		views[5] = new CustomerView(viewTitles[5], thisMainView);
+		
+		buttonText[0] = "LoginView";
+		buttonText[1] = "Manager";
+		buttonText[2] = "Customer Online";
+		buttonText[3] = "Customer Cart";
+		buttonText[4] = "Customer Receipt";
+		buttonText[5] = "Customer";
+		
+		addButtons();
+		
+		currentView = views[0];
+		mainFrame.add(currentView.getView());
+		mainFrame.validate();
 	}
 	
 	private static void setFrame (String text, int width, int height) {
@@ -86,6 +97,7 @@ public final class MainView {
 		for (int i = 0; i < numViews; i++) {
 			buttons[i] = new Button(buttonText[i]);
 			buttons[i].addActionListener(new buttonAction());
+			buttons[i].setVisible(false);
 			buttonContainer.add(buttons[i]);
 		}
 	
@@ -95,33 +107,6 @@ public final class MainView {
 		mainFrame.add(buttonContainer, BorderLayout.WEST);		
 	}
 	
-	private static void addViews () {
-		
-		views[0] = new ManagerView(viewTitles[0], thisMainView);
-		views[1] = new CustomerOnlineView(viewTitles[1], thisMainView);
-		views[2] = new CustomerCheckoutView(viewTitles[2], thisMainView);
-		views[3] = new CustomerReceiptView(viewTitles[3], thisMainView);
-		views[4] = new CustomerView(viewTitles[4], thisMainView);
-	
-		currentView = views[0];
-		mainFrame.add(currentView.getView());
-		mainFrame.validate();
-	}
-	
-	
-	//SWITCH VIEWS
-	
-	private static void switchView (int view, String title) {
-		if (currentView.getViewName() != title) {
-			mainFrame.remove(currentView.getView());
-			currentView = views[view];
-			mainFrame.add(currentView.getView());
-			mainFrame.validate();
-		}
-	}//SWITCH VIEW
-	
-	
-	
 	
 	//LISTENER
 	
@@ -129,50 +114,51 @@ public final class MainView {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < numViews; i++) {
 				if ( e.getSource() == buttons[i]) {
-					switchView(i,buttonText[i]);
+					switchView(i);
 				}	
 			} //MATCH VIEW OF BUTTON PRESSED THEN SWITCH
         }
 	}//END LISTENER
 	
 	
-	//PUBLIC VIEW SWITCHING FROM CHILD VIEWS USED FOR DISPLAYING RESULTS
 	
+	//SWITCH VIEWS FOR MAIN AND CHILD USE
 	
-	public void showResultsView(int view) {
-		views[view].clear(); //Clears Results Views
-		views[view].reInit(viewTitles[view], thisMainView); //Reinits the Label for the View and sets it up
-		
-		//EXAMPLE CODE TO BE REPLACED BY CONTROL LOGIC
-		
-		 int rows = 5;
-         int cols = 3;
-         int cellWidth = 200;
-         String header = "EXAMPLE FOR A CLERK RESULT VIEW:";
-         String[] titles = {"Result Col 1","Result Col 2","Result Col 3"};
-        
-         String[][] results = new String[rows][cols];
-         for (int i = 0; i < rows; i++) {
-                 for (int j = 0; j < cols; j++) {
-                         results[i][j] = "Example Result: " + i + " , " + j;
-                 }
-         }
-         
-         //END EXAMPLE CODE
-         
-         views[view].showResults(header,titles,results,cellWidth);
-         
-         
-		mainFrame.remove(currentView.getView());
-		currentView = views[view];
-		mainFrame.add(currentView.getView());
+	public void switchView (int view) {
+		if (currentView != views[view]) {
+			mainFrame.remove(currentView.getView());
+			currentView = views[view];
+			mainFrame.add(currentView.getView());
+		}
+		setButtonVisibility(view);
+	}//SWITCH VIEW
+	
+	//PRIVATE HELPERS FOR SETTING BUTTON VISIBILITY
+	
+	private void clearButtons() {
+		for (int i = 0; i < numViews; i++) {
+			buttons[i].setVisible(false);
+		}
+	}
+	
+	private void setButtonVisibility(int view) {
+		switch (view) {
+		case 0: clearButtons();
+			break;
+		case 1: clearButtons();
+			buttons[0].setVisible(true);
+			break;
+		case 2: clearButtons();
+			buttons[0].setVisible(true);
+			buttons[2].setVisible(true);
+			buttons[3].setVisible(true);
+			break;
+		}
 		mainFrame.validate();
-		
 	}
 	
 	
 	//PUBLIC METHODS FOR GETTING THE CONTROLLER, ADDING ITEMS TO CART, GETTING VIEWS
-	
 	
 	public String getController() {
 		return thisController;		
