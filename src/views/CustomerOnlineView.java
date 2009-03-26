@@ -54,19 +54,11 @@ public class CustomerOnlineView extends View {
 	}
 	
 	private void init() {
-		
-
 		createSearchPanel();
-		
 		createResultPanel();
-		
 	}
 	
 	private void createSearchPanel () {
-		
-		//FILLS for GRID
-		
-		Dimension filler = new Dimension(32,32);
 		
 		searchPanel = new Panel();
 		searchPanel.setBackground(bg3);
@@ -231,6 +223,7 @@ public class CustomerOnlineView extends View {
 			resultQuantity[row] = new JFormattedTextField();
 			resultQuantity[row].setFont(font1);
 			resultQuantity[row].setSize(8, 32);
+			resultQuantity[row].setText("Example Item");
 			resultQuantity[row].setEditable(false);
 			purchaseSubPanel2.add(resultQuantity[row]);
 			
@@ -279,7 +272,8 @@ public class CustomerOnlineView extends View {
 	}
 	
 	private void addToCart(int row) {
-		this.getParent().addItem(resultID[row]);
+		this.getParent().addItem("Example Item");
+		((CustomerCheckoutView) this.getParent().getView(2)).update();
 	}
 	
 	

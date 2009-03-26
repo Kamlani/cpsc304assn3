@@ -55,7 +55,6 @@ public final class MainView {
 		buttonText[4] = "Customer";
 		
 		totalCartItems = 16;
-		cartItems = 0;
 		cart = new Vector<Object>();
 		
 		addButtons();
@@ -172,19 +171,23 @@ public final class MainView {
 	}
 	
 	
-	//PUBLIC METHODS FOR GETTING THE CONTROLLER
+	//PUBLIC METHODS FOR GETTING THE CONTROLLER, ADDING ITEMS TO CART, GETTING VIEWS
 	
 	
 	public String getController() {
 		return thisController;		
 	}
 	
+	public View getView(int view) {
+		return views[view];		
+	}
+	
 	public Vector<Object> getCart() {
 		return cart;		
 	}
 	
-	public boolean addItem(int item) {
-		if (cartItems < totalCartItems) {
+	public boolean addItem(Object item) {
+		if (cart.size() < totalCartItems) {
 			cart.add(item);
 			return true;
 		} else {
@@ -194,7 +197,6 @@ public final class MainView {
 	
 	public void removeItem(int index) {
 		cart.removeElementAt(index);
-		cartItems--;
 	}
 	
 

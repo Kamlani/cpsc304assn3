@@ -60,14 +60,7 @@ public class View {
 	public void setParent(MainView parent) {
 		thisParent = parent;		
 	}
-	
-	//ONLY USED BY RESULTS VIEWS
-	
-	public void showResults (String header, String[] titles, String[][] results, int cellWidth) {
-        
-		ResultSet theResults = new ResultSet(header,titles,results,cellWidth);
-        this.getContainer().add(theResults.getContainer(), BorderLayout.WEST);
-	}
+
 
 	//GETTERS
 	
@@ -91,4 +84,15 @@ public class View {
 	public void clear () {
 		this.getContainer().removeAll();
 	}
+	
+	
+	//ONLY USED BY CHECKOUT VIEWS
+	
+	public void showResults (String header, String[] titles, String[][] results, int cellWidth) {
+        
+		ResultSet theResults = new ResultSet(header,titles,results,cellWidth);
+        this.getContainer().add(theResults.getContainer(), BorderLayout.WEST);
+	}
+	
+	
 }
