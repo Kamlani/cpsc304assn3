@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import views.CustomerOnlineView.addToCartAction;
+
 /*
  * Use getContainer(), or this.getContainer() to get the main container for the view
  * add components to the Panel returned from getContainer()
@@ -13,19 +15,19 @@ import javax.swing.*;
  * For more complicated layouts, nest an element inside the Panel returned from getContainer()
 */
 
-public class ClerkReturnView extends View {
+public class CustomerCheckoutView extends View {
 	
 	private Panel purchasePanel;
 	
-	private int totalReturnRows;
-	private int returnRows;
-	private Panel[] returnRowPanel;
-	private JFormattedTextField[] returnText;
-	private JFormattedTextField[] returnQuantity;
-	private Button returnAdd;
+	private int totalRows;
+	private int checkoutRows;
+	private Panel[] checkoutRowPanel;
+	private JFormattedTextField[] itemText;
+	private JFormattedTextField[] itemQuantity;
+	private Button[] removeItem;
 	private Button returnSubmit;
 
-	public ClerkReturnView (String title, MainView parent) {
+	public CustomerCheckoutView (String title, MainView parent) {
 		
 		//default setup methods defined in View.java
 		setParent(parent);
@@ -33,13 +35,15 @@ public class ClerkReturnView extends View {
 		setContainer();
 		setTitle(title);
 		
-		totalReturnRows = 16;
+		totalRows = 16;
 		
-		returnRows = 1;
+		checkoutRows = 1;
 		
-		returnRowPanel = new Panel[totalReturnRows];
-		returnText = new JFormattedTextField[totalReturnRows];
-		returnQuantity = new JFormattedTextField[totalReturnRows];
+		removeItem = new Button[totalRows];
+		
+		checkoutRowPanel = new Panel[totalRows];
+		itemText = new JFormattedTextField[totalRows];
+		itemQuantity = new JFormattedTextField[totalRows];
 		
 		init();
 	}
@@ -62,7 +66,7 @@ public class ClerkReturnView extends View {
 		
 		purchasePanel = new Panel();
 		purchasePanel.setBackground(bg3);
-		purchasePanel.setLayout(new GridLayout(   totalReturnRows+2   ,1));
+		purchasePanel.setLayout(new GridLayout(   totalRows+2   ,1));
 		purchasePanel.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
 		this.getContainer().add(purchasePanel, BorderLayout.CENTER);
 		
@@ -71,7 +75,7 @@ public class ClerkReturnView extends View {
 		purchaseLabel.setFont(font1);
 		purchasePanel.add(purchaseLabel);
 		
-		createreturnRows();
+		createcheckoutRows();
 		setPurchaseRowVisible(0, true);
 		
 		Panel returnSubmitPanel = new Panel();
@@ -81,13 +85,6 @@ public class ClerkReturnView extends View {
 			returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
 			returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
 			
-			returnAdd = new Button("Add Item");
-			returnAdd.addActionListener(new returnAddAction());
-			returnSubmitPanel.add(returnAdd);
-			
-			returnAdd = new Button("Remove Last Item");
-			returnAdd.addActionListener(new purchaseRemoveAction());
-			returnSubmitPanel.add(returnAdd);
 			
 			returnSubmit = new Button("Submit Return");
 			returnSubmit.addActionListener(new submitReturnAction());
@@ -100,35 +97,35 @@ public class ClerkReturnView extends View {
 	
 	
 	
-	private void createreturnRows () {
+	private void createcheckoutRows () {
 		
 		Dimension filler = new Dimension(32,32);
 		
-		for (int row = 0; row < totalReturnRows; row++) {
+		for (int row = 0; row < totalRows; row++) {
 		
-			returnRowPanel[row] = new Panel(new GridLayout(1,3));
+			checkoutRowPanel[row] = new Panel(new GridLayout(1,3));
 			
 			 if (row % 2 == 0)
-				 returnRowPanel[row].setBackground(bg2);
+				 checkoutRowPanel[row].setBackground(bg2);
 			 else
-				 returnRowPanel[row].setBackground(bg3);
+				 checkoutRowPanel[row].setBackground(bg3);
         	
 			//SUB PANEL 1
 			
 			Panel purchaseSubPanel1 = new Panel();
 			purchaseSubPanel1.setLayout(new GridLayout(1,3));
 					
-			Label purchaseItemLabel = new Label("Return Item " + (row+1) + ": ");
+			Label purchaseItemLabel = new Label("Item " + (row+1) + ": ");
 			purchaseItemLabel.setFont(font1);
 			purchaseSubPanel1.add(purchaseItemLabel);
 			
-			returnText[row] = new JFormattedTextField();
-			returnText[row].setFont(font1);
-			returnText[row].setEditable(true);
-			purchaseSubPanel1.add(returnText[row]);
+			itemText[row] = new JFormattedTextField();
+			itemText[row].setFont(font1);
+			itemText[row].setEditable(false);
+			purchaseSubPanel1.add(itemText[row]);
 			
 			purchaseSubPanel1.add(new Box.Filler(filler, filler, filler));
-			returnRowPanel[row].add(purchaseSubPanel1);
+			checkoutRowPanel[row].add(purchaseSubPanel1);
 			
 			//SUB PANEL 2
 			
@@ -136,56 +133,47 @@ public class ClerkReturnView extends View {
 			Panel purchaseSubPanel2 = new Panel();
 			purchaseSubPanel2.setLayout(new GridLayout(1,3));
 					
-			Label returnQuantityLabel = new Label("Return Quantity: ");
-			returnQuantityLabel.setFont(font1);
-			purchaseSubPanel2.add(returnQuantityLabel);
+			Label itemQuantityLabel = new Label("Quantity: ");
+			itemQuantityLabel.setFont(font1);
+			purchaseSubPanel2.add(itemQuantityLabel);
 			
-			returnQuantity[row] = new JFormattedTextField();
-			returnQuantity[row].setFont(font1);
-			returnQuantity[row].setSize(8, 32);
-			returnQuantity[row].setEditable(true);
-			purchaseSubPanel2.add(returnQuantity[row]);
+			itemQuantity[row] = new JFormattedTextField();
+			itemQuantity[row].setFont(font1);
+			itemQuantity[row].setSize(8, 32);
+			itemQuantity[row].setEditable(false);
+			purchaseSubPanel2.add(itemQuantity[row]);
 			
-			purchaseSubPanel2.add(new Box.Filler(filler, filler, filler));
-			returnRowPanel[row].add(purchaseSubPanel2);
+			removeItem[row] = new Button("Remove From Cart");
+			removeItem[row].addActionListener(new removeCartItem());
+			purchaseSubPanel2.add(removeItem[row]);
 			
-			returnRowPanel[row].setVisible(false);
-			purchasePanel.add(returnRowPanel[row]);
+			checkoutRowPanel[row].add(purchaseSubPanel2);
+			
+			checkoutRowPanel[row].setVisible(false);
+			
+			purchasePanel.add(checkoutRowPanel[row]);
 		}//for
 		
 	}//CREATE PURCHASE ROWS
 	
 	private void clearRow(int row) {
 		
-		returnText[row].setText(" ");
-		returnQuantity[row].setText(" ");
+		itemText[row].setText(" ");
+		itemQuantity[row].setText(" ");
 		
 	} //CLEAR ROW
 	
 	private void setPurchaseRowVisible (int row, boolean vis) {
-		returnRowPanel[row].setVisible(vis);
+		checkoutRowPanel[row].setVisible(vis);
 	}//SET PURCHASE ROW VISIBILE
 	
 	
 	//LISTENERS
+
 	
-	
-	public class returnAddAction implements ActionListener { 
+	public class removeCartItem implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
-			if (returnRows < totalReturnRows) {
-				setPurchaseRowVisible(returnRows, true);
-				returnRows++;
-			}
-        }
-	}
-	
-	public class purchaseRemoveAction implements ActionListener { 
-		public void actionPerformed(ActionEvent e) {
-			if (returnRows > 1) {
-				returnRows--;
-				clearRow(returnRows);
-				setPurchaseRowVisible(returnRows, false);
-			}
+			//Controller
         }
 	}
 	

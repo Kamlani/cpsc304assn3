@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Vector;
 
 public final class MainView {
 	
@@ -13,14 +14,20 @@ public final class MainView {
 	private static JFrame mainFrame;
 	private static Label title;	
 
+	
 	private static int numViews;
 	private static View currentView;
 	private static String[] viewTitles;
 	private static View[] views;
 	
+	
 	private static Panel buttonContainer;
 	private static String[] buttonText;
 	private static Button[] buttons;
+	
+	private static int totalCartItems;
+	private static Vector<Object> cart;
+	private static int cartItems;
 	
 	public MainView () {
 		
@@ -33,13 +40,23 @@ public final class MainView {
 		viewTitles = new String[numViews];
 		views = new View[numViews];
 		
+		viewTitles[0] = "ManagerView";
+		viewTitles[1] = "CustomerOnlineView";
+		viewTitles[2] = "CustomerCheckoutView";
+		viewTitles[3] = "CustomerReceiptView: ";
+		viewTitles[4] = "CustomerView: ";
+		
 		buttons = new Button[numViews];
 		buttonText = new String[numViews];
 		buttonText[0] = "Manager";
-		buttonText[1] = "Clerk Purchase";
-		buttonText[2] = "Clerk Return";
-		buttonText[3] = "Clerk Results";
+		buttonText[1] = "Customer Online";
+		buttonText[2] = "Customer Cart";
+		buttonText[3] = "Customer Receipt";
 		buttonText[4] = "Customer";
+		
+		totalCartItems = 16;
+		cartItems = 0;
+		cart = new Vector<Object>();
 		
 		addButtons();
 		addViews();
@@ -80,16 +97,11 @@ public final class MainView {
 	}
 	
 	private static void addViews () {
-		viewTitles[0] = "Manager View";
-		viewTitles[1] = "Clerk Purchase View: ";
-		viewTitles[2] = "Clerk Return View: ";
-		viewTitles[3] = "Clerk Result View: ";
-		viewTitles[4] = "Customer View: ";
 		
 		views[0] = new ManagerView(viewTitles[0], thisMainView);
-		views[1] = new ClerkPurchaseView(viewTitles[1], thisMainView);
-		views[2] = new ClerkReturnView(viewTitles[2], thisMainView);
-		views[3] = new ClerkResultView(viewTitles[3], thisMainView);
+		views[1] = new CustomerOnlineView(viewTitles[1], thisMainView);
+		views[2] = new CustomerCheckoutView(viewTitles[2], thisMainView);
+		views[3] = new CustomerReceiptView(viewTitles[3], thisMainView);
 		views[4] = new CustomerView(viewTitles[4], thisMainView);
 	
 		currentView = views[0];
@@ -165,6 +177,24 @@ public final class MainView {
 	
 	public String getController() {
 		return thisController;		
+	}
+	
+	public Vector<Object> getCart() {
+		return cart;		
+	}
+	
+	public boolean addItem(int item) {
+		if (cartItems < totalCartItems) {
+			cart.add(item);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void removeItem(int index) {
+		cart.removeElementAt(index);
+		cartItems--;
 	}
 	
 
