@@ -196,48 +196,49 @@ public class CustomerOnlineView extends View {
         	
 //SUB PANEL 1
 			
-			Panel purchaseSubPanel1 = new Panel();
-			purchaseSubPanel1.setLayout(new GridLayout(1,3));
+			Panel subPanel1 = new Panel();
+			subPanel1.setLayout(new GridLayout(1,3));
 					
 			Label purchaseItemLabel = new Label("Item " + (row+1) + ": ");
 			purchaseItemLabel.setFont(font1);
-			purchaseSubPanel1.add(purchaseItemLabel);
+			subPanel1.add(purchaseItemLabel);
 			
 			resultText[row] = new JFormattedTextField();
 			resultText[row].setFont(font1);
 			resultText[row].setEditable(false);
-			purchaseSubPanel1.add(resultText[row]);
+			subPanel1.add(resultText[row]);
 			
-			purchaseSubPanel1.add(new Box.Filler(filler, filler, filler));
-			resultRowPanel[row].add(purchaseSubPanel1);
+			subPanel1.add(new Box.Filler(filler, filler, filler));
+			resultRowPanel[row].add(subPanel1);
 			
 //SUB PANEL 2
 		
-			Panel purchaseSubPanel2 = new Panel();
-			purchaseSubPanel2.setLayout(new GridLayout(1,3));
+			Panel subPanel2 = new Panel();
+			subPanel2.setLayout(new GridLayout(1,3));
 					
 			Label resultQuantityLabel = new Label("Quantity: ");
 			resultQuantityLabel.setFont(font1);
-			purchaseSubPanel2.add(resultQuantityLabel);
+			subPanel2.add(resultQuantityLabel);
 			
 			resultQuantity[row] = new JFormattedTextField();
 			resultQuantity[row].setFont(font1);
 			resultQuantity[row].setSize(8, 32);
 			resultQuantity[row].setText("Example Item");
 			resultQuantity[row].setEditable(false);
-			purchaseSubPanel2.add(resultQuantity[row]);
+			subPanel2.add(resultQuantity[row]);
 			
 			resultAddCart[row] = new Button("Add To Cart");
 			resultAddCart[row].addActionListener(new addToCartAction());
-			purchaseSubPanel2.add(resultAddCart[row]);	
+			subPanel2.add(resultAddCart[row]);	
 			
-			resultRowPanel[row].add(purchaseSubPanel2);
+			resultRowPanel[row].add(subPanel2);
 			
 			resultRowPanel[row].setVisible(false);
 			resultPanel.add(resultRowPanel[row]);
 		}//for
 		
 	}//CREATE RESULT ROWS
+	
 	
 	private void clearRow(int row) {
 		
@@ -273,7 +274,7 @@ public class CustomerOnlineView extends View {
 	
 	private void addToCart(int row) {
 		this.getParent().addItem("Example Item");
-		((CustomerCheckoutView) this.getParent().getView(2)).update();
+		((CustomerCheckoutView) this.getParent().getView(3)).update();
 	}
 	
 	

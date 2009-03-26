@@ -77,7 +77,7 @@ public class CustomerCheckoutView extends View {
 		returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
 		returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
 		returnSubmit = new Button("Submit Return");
-		returnSubmit.addActionListener(new submitReturnAction());
+		returnSubmit.addActionListener(new submitOrderAction());
 		returnSubmitPanel.add(returnSubmit);		
 		
 		checkoutPanel.add(returnSubmitPanel);
@@ -97,7 +97,6 @@ public class CustomerCheckoutView extends View {
 	private void updateCheckoutRows () {
 		for (int i = 0; i < this.getParent().getCart().size(); i++) {
 			checkoutRowPanel[i].setVisible(true);
-			System.out.print("TEST " + i);
 			itemText[i].setText(this.getParent().getCart().get(i).toString());
 		}
 	}//updateCheckoutRows
@@ -164,19 +163,27 @@ public class CustomerCheckoutView extends View {
 	
 	public class removeCartItem implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
-			//Controller
+			for (int i = 0; i < totalRows; i++) {
+				if (e.getSource() == removeItem[i]) {
+					removeItem(i);
+				}
+			}
         }
-	}
+	}	
 	
-	
-	public class submitReturnAction implements ActionListener { 
+	public class submitOrderAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			showResults();
         }
 	}
 	
+	private void removeItem(int item) {
+		this.getParent().removeItem(item);
+		update();
+	}
+	
 	private void showResults() {
-		this.getParent().showResultsView(3);
+		//Something
 	}
 	
 	
