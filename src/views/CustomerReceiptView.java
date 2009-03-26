@@ -13,9 +13,9 @@ import javax.swing.*;
  * For more complicated layouts, nest an element inside the Panel returned from getContainer()
 */
 
-public class ClerkResultView extends View {
+public class CustomerReceiptView extends View {
 
-	public ClerkResultView (String title, MainView parent) {
+	public CustomerReceiptView (String title, MainView parent) {
 		
 		//default setup methods defined in View.java
 		setParent(parent);
