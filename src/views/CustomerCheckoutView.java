@@ -24,7 +24,7 @@ public class CustomerCheckoutView extends View {
 	private JFormattedTextField[] itemText;
 	private JFormattedTextField[] itemQuantity;
 	private Button[] removeItem;
-	private Button returnSubmit;
+	private Button submitOrder;
 
 	public CustomerCheckoutView (String title, MainView parent) {
 		
@@ -67,39 +67,32 @@ public class CustomerCheckoutView extends View {
 		
 		createCheckoutRows();
 		
-		for (int i = 0; i < this.getParent().getCart().size(); i++) {
-			checkoutRowPanel[i].setVisible(true);
-		}
+		Panel submitOrderPanel = new Panel();
+		submitOrderPanel.setLayout(new GridLayout(1,6));
+		submitOrderPanel.add(new Box.Filler(filler, filler, filler));
+		submitOrderPanel.add(new Box.Filler(filler, filler, filler));
+		submitOrderPanel.add(new Box.Filler(filler, filler, filler));
+		submitOrder = new Button("Submit Order");
+		submitOrder.addActionListener(new submitOrderAction());
+		submitOrderPanel.add(submitOrder);		
 		
-		Panel returnSubmitPanel = new Panel();
-		returnSubmitPanel.setLayout(new GridLayout(1,6));
-		returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
-		returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
-		returnSubmitPanel.add(new Box.Filler(filler, filler, filler));
-		returnSubmit = new Button("Submit Return");
-		returnSubmit.addActionListener(new submitOrderAction());
-		returnSubmitPanel.add(returnSubmit);		
-		
-		checkoutPanel.add(returnSubmitPanel);
+		checkoutPanel.add(submitOrderPanel);
 		
 	}//CREATE PURCHASE PANEL
 	
+	
+	//PUBLIC UPDATES THE CHECKOUT ROWS
+	
 	public void update() {
-		
 		for (int i = 0; i < totalRows; i++) {
 			checkoutRowPanel[i].setVisible(false);
 			itemText[i].setText("");
 		}
-		
-		updateCheckoutRows();
-	}//update
-	
-	private void updateCheckoutRows () {
 		for (int i = 0; i < this.getParent().getCart().size(); i++) {
 			checkoutRowPanel[i].setVisible(true);
 			itemText[i].setText(this.getParent().getCart().get(i).toString());
 		}
-	}//updateCheckoutRows
+	}//update
 	
 	
 	private void createCheckoutRows () {
@@ -144,24 +137,24 @@ public class CustomerCheckoutView extends View {
 			purchaseSubPanel2.add(itemQuantity[i]);
 			
 			removeItem[i] = new Button("Remove From Cart");
-			removeItem[i].addActionListener(new removeCartItem());
+			removeItem[i].addActionListener(new removeItemAction());
 			purchaseSubPanel2.add(removeItem[i]);
 			
 			checkoutRowPanel[i].add(purchaseSubPanel2);
-			checkoutRowPanel[i].setVisible(false);
 			
+//ADD THE ROW PANEL
 			checkoutPanel.add(checkoutRowPanel[i]);
-		}//for
+		}//FOR
 		
-		updateCheckoutRows();
+		update(); //CALL UPDATE
 		
-	}//CREATE PURCHASE ROWS
+	}//CREATE CHECKOUT ROWS
 
 	
 	//LISTENERS
 
 	
-	public class removeCartItem implements ActionListener { 
+	public class removeItemAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < totalRows; i++) {
 				if (e.getSource() == removeItem[i]) {
@@ -173,17 +166,20 @@ public class CustomerCheckoutView extends View {
 	
 	public class submitOrderAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
-			showResults();
+			submitOrder();
         }
 	}
+	
+	//HELPERS
 	
 	private void removeItem(int item) {
 		this.getParent().removeItem(item);
 		update();
 	}
 	
-	private void showResults() {
-		//Something
+	private void submitOrder() {
+		//CONTROLLER STUFF
+		this.getParent().switchView(4);
 	}
 	
 	

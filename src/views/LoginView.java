@@ -103,7 +103,7 @@ public class LoginView extends View {
 			
 	//SUB PANEL 3
 		
-			//Login BUTTON
+			//Login BUTTON PANEL
 			
 			Panel subPanel3 = new Panel();
 			subPanel3.setLayout(new GridLayout(2,1));
