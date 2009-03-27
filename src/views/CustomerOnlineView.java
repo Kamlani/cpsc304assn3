@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -16,21 +17,21 @@ import javax.swing.*;
 public class CustomerOnlineView extends View {
 	
 	private Panel resultPanel;
+
+	private Vector<Object> results;
 	
 	private int totalResultRows;
-	private int resultRows;
-	private Panel[] resultRowPanel;
-
+	private Panel[] resultRowPanel;	
 	private JFormattedTextField[] resultText;
-	private int[] resultID;
 	private JFormattedTextField[] resultQuantity;
-	
-	private Button resultCheck;
 	private Button[] resultAddCart;
 
+	private Button resultCheck;
 	private Panel searchRowPanel;
 	private JFormattedTextField searchSubPanelTitle;
 	private Panel searchPanel;
+
+	
 
 	public CustomerOnlineView (String title, MainView parent) {
 		
@@ -40,15 +41,14 @@ public class CustomerOnlineView extends View {
 		setContainer();
 		setTitle(title);
 		
-		totalResultRows = 8;
-		
-		resultRows = 1;
+		totalResultRows = 12;
 		
 		resultRowPanel = new Panel[totalResultRows];
-		resultText = new JFormattedTextField[totalResultRows];
-		resultID = new int[totalResultRows];
-		resultQuantity = new JFormattedTextField[totalResultRows];
 		resultAddCart = new Button[totalResultRows];
+		resultText = new JFormattedTextField[totalResultRows];		
+		resultQuantity = new JFormattedTextField[totalResultRows];
+		
+		results = new Vector<Object>();// INIT TO SIZE 0
 		
 		init();
 	}
@@ -155,18 +155,20 @@ public class CustomerOnlineView extends View {
 		
 	}//SEARCH PANEL
 	
+	
+	//RESULTS PANEL
+	
+	
 	private void createResultPanel () {
 		
 		//FILLS for GRID
-		
-		Dimension filler = new Dimension(32,32);
 		
 		//SET UP PANELS FOR CLERK
 		
 		resultPanel = new Panel();
 		resultPanel.setBackground(bg3);
 		resultPanel.setLayout(new GridLayout(   totalResultRows+2   ,1));
-		resultPanel.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
+		resultPanel.setPreferredSize(new Dimension(Short.MAX_VALUE,320));
 		this.getContainer().add(resultPanel, BorderLayout.SOUTH);
 		
 		//label for Purchase Panel
@@ -175,7 +177,6 @@ public class CustomerOnlineView extends View {
 		resultPanel.add(purchaseLabel);
 		
 		createResultRows();
-		setPurchaseRowVisible(0, true);		
 		
 	}//CREATE RESULT PANEL
 	
@@ -223,42 +224,69 @@ public class CustomerOnlineView extends View {
 			resultQuantity[row] = new JFormattedTextField();
 			resultQuantity[row].setFont(font1);
 			resultQuantity[row].setSize(8, 32);
-			resultQuantity[row].setText("Example Item");
 			resultQuantity[row].setEditable(false);
 			subPanel2.add(resultQuantity[row]);
 			
-			resultAddCart[row] = new Button("Add To Cart");
+			resultAddCart[row] = new Button("Add One To Cart");
 			resultAddCart[row].addActionListener(new addToCartAction());
 			subPanel2.add(resultAddCart[row]);	
 			
 			resultRowPanel[row].add(subPanel2);
 			
-			resultRowPanel[row].setVisible(false);
 			resultPanel.add(resultRowPanel[row]);
 		}//for
 		
+		update(); //CALL UPDATE
+		
 	}//CREATE RESULT ROWS
 	
+	//UPDATE SHOULD BE CALLED AFTER YOU GET SEARCH RESULTS FROM DB IN THE LISTENER resultCheckAction
 	
-	private void clearRow(int row) {
-		
-		resultText[row].setText(" ");
-		resultQuantity[row].setText(" ");
-		
+	private void update() {
+		for (int i = 0; i < totalResultRows; i++ ) {
+			resultRowPanel[i].setVisible(false);
+		}
+		for (int i = 0; i < results.size(); i++ ) {
+			
+			resultText[i].setText(((Vector)results.get(i)).get(1).toString());
+			resultQuantity[i].setText(((Vector)results.get(i)).get(2).toString());
+			resultRowPanel[i].setVisible(true);
+		}
 	} //CLEAR ROW
+	
+	
+	
 
-	private void setPurchaseRowVisible (int row, boolean vis) {
-		resultRowPanel[row].setVisible(vis);
-	}//SET PURCHASE ROW VISIBILE
-	
-	
 	//LISTENERS
 	
 	
 	public class resultCheckAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			
+			results.removeAllElements();
 			
+			//POPULATES RESULTS OF SEARCH FROM CONTROLLER HERE IS AN EXAMPLE
+			Vector<Object> exampleResult = new Vector<Object>();
+			exampleResult.add(123456789);
+			exampleResult.add("Blah");
+			exampleResult.add(2);
+			
+			Vector<Object> exampleResult2 = new Vector<Object>();
+			exampleResult2.add(123456789);
+			exampleResult2.add("Poop");
+			exampleResult2.add(7);
+			
+			Vector<Object> exampleResult3 = new Vector<Object>();
+			exampleResult3.add(123456789);
+			exampleResult3.add("More Poop");
+			exampleResult3.add(6);
+			
+			results.add(exampleResult);
+			results.add(exampleResult2);
+			results.add(exampleResult3);
+
+			
+			update();
 		}
 	}
 	
@@ -272,8 +300,14 @@ public class CustomerOnlineView extends View {
         }
 	}
 	
-	private void addToCart(int row) {
-		this.getParent().addItem("Example Item");
+	private void addToCart(int item) {
+		
+		//CONTROLLER LOGIC FOR DECREMENTING RESULT ITEM'S QUANTITY GOES HERE, CHECK WITH DB TO MAKE SURE QUANTITY EXISTS
+		//((Vector)results.get(item)).set(2, UPDATEDQUANTITY);
+		
+		//ADDS THE SELECTED ITEM IF DB SAYS IT HAS ENOUGH
+		Vector<Object> itemAdd = ((Vector)results.get(item));
+		this.getParent().addItem( itemAdd );
 		((CustomerCheckoutView) this.getParent().getView(3)).update();
 	}
 	

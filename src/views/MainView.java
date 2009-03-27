@@ -182,8 +182,17 @@ public final class MainView {
 		return cart;		
 	}
 	
-	public boolean addItem(Object item) {
+	public boolean addItem(Vector<Object> item) {
 		if (cart.size() < totalCartItems) {
+			for (int i = 0; i < cart.size(); i++) {
+				if ( ((Vector)cart.get(i)).get(0) == item.get(0) ) { //ITEM IS IN CART, UPC MATCH
+					
+					((Vector)cart.get(i)).set   ( 2,   1 + (Integer) ((Vector)cart.get(i)).get(2)   ); //Sets index 2 (QUANTITY) to plus 1
+					return true;
+				}
+			}
+			
+			item.set(2, 1); //SETS THE QUANTITY OF THE ITEM TO ADD TO 1
 			cart.add(item);
 			return true;
 		} else {
