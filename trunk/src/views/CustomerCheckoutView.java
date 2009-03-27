@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -87,10 +88,12 @@ public class CustomerCheckoutView extends View {
 		for (int i = 0; i < totalRows; i++) {
 			checkoutRowPanel[i].setVisible(false);
 			itemText[i].setText("");
+			itemQuantity[i].setText("");
 		}
 		for (int i = 0; i < this.getParent().getCart().size(); i++) {
 			checkoutRowPanel[i].setVisible(true);
-			itemText[i].setText(this.getParent().getCart().get(i).toString());
+			itemText[i].setText(((Vector)this.getParent().getCart().get(i)).get(1).toString());
+			itemQuantity[i].setText(((Vector)this.getParent().getCart().get(i)).get(2).toString());
 		}
 	}//update
 	
@@ -173,7 +176,13 @@ public class CustomerCheckoutView extends View {
 	//HELPERS
 	
 	private void removeItem(int item) {
-		this.getParent().removeItem(item);
+		Vector<Object> theCartItem = ((Vector)this.getParent().getCart().get(item)); //TEMP VAR FOR CURRENT CART ITEM TARGETED FOR DELETION
+		
+		if ( (Integer) theCartItem.get(2) == 1) {
+			this.getParent().removeItem(item);
+		} else {
+			theCartItem.set(2, (Integer) theCartItem.get(2) -1 );
+		}
 		update();
 	}
 	
