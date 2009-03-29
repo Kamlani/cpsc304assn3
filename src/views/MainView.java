@@ -42,7 +42,7 @@ public final class MainView {
 		setFrame("CPSC 304 Assn3 Main View", 960, 600);		
 		addTitle("CPSC 304 Assn3 Main View");
 		
-		numViews = 6;
+		numViews = 8;
 		viewTitles = new String[numViews];
 		views = new View[numViews];
 		buttons = new Button[numViews];
@@ -53,21 +53,27 @@ public final class MainView {
 		viewTitles[2] = "CustomerOnlineView: ";
 		viewTitles[3] = "CustomerCheckoutView: ";
 		viewTitles[4] = "CreditCardView: ";
-		viewTitles[5] = "CustomerView: ";
+		viewTitles[5] = "RegisterView: ";
+		viewTitles[6] = "InStoreView: ";
+		viewTitles[7] = "returnView: ";
 		
 		views[0] = new LoginView(viewTitles[0], thisMainView);
 		views[1] = new ManagerView(viewTitles[1], thisMainView);
 		views[2] = new CustomerOnlineView(viewTitles[2], thisMainView);
 		views[3] = new CustomerCheckoutView(viewTitles[3], thisMainView);
 		views[4] = new CreditCardView(viewTitles[4], thisMainView);
-		views[5] = new CustomerView(viewTitles[5], thisMainView);
+		views[5] = new RegisterView(viewTitles[5], thisMainView);
+		views[6] = new InStoreView(viewTitles[6], thisMainView);		
+		views[7] = new ReturnView(viewTitles[7], thisMainView);
 		
 		buttonText[0] = "LoginView";
 		buttonText[1] = "Manager";
 		buttonText[2] = "Customer Online";
 		buttonText[3] = "Customer Cart";
 		buttonText[4] = "Credit Card";
-		buttonText[5] = "Customer";
+		buttonText[5] = "Register Customer";
+		buttonText[6] = "In Store Customer";
+		buttonText[7] = "Customer Return";
 		
 		addButtons();
 		
@@ -146,10 +152,23 @@ public final class MainView {
 				buttons[2].setVisible(true);
 				buttons[3].setVisible(true);
 				break;
+			case 3: clearButtons();
+				buttons[0].setVisible(true);
+				buttons[2].setVisible(true);
+				buttons[3].setVisible(true);
+			break;
 			case 4: clearButtons();
 				buttons[0].setVisible(true);
-				buttons[3].setVisible(true);
 				buttons[4].setVisible(true);
+			break;
+			case 5: clearButtons();
+				buttons[0].setVisible(true);
+			break;
+			case 6: clearButtons();
+				buttons[0].setVisible(true);
+			break;
+			case 7: clearButtons();
+				buttons[0].setVisible(true);
 			break;
 		}
 		mainFrame.validate();
@@ -159,11 +178,16 @@ public final class MainView {
 	//PUBLIC METHODS FOR SWITCH VIEWS
 	
 	public void switchView (int view) {
+		if (view == 0) {
+			cid = 0;
+			cart.removeAllElements();
+		}//reset all data
 		if (currentView != views[view]) {
 			mainFrame.remove(currentView.getView());
 			currentView = views[view];
 			mainFrame.add(currentView.getView());
 		}
+		((CustomerCheckoutView)views[3]).update();
 		setButtonVisibility(view);
 	}//SWITCH VIEW
 	
