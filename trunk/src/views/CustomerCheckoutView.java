@@ -62,7 +62,7 @@ public class CustomerCheckoutView extends View {
 		this.getContainer().add(checkoutPanel, BorderLayout.CENTER);
 		
 		//label for Purchase Panel
-		Label purchaseLabel = new Label("Return Items: ");
+		Label purchaseLabel = new Label("Checkout With Items: ");
 		purchaseLabel.setFont(font1);
 		checkoutPanel.add(purchaseLabel);
 		
@@ -187,7 +187,8 @@ public class CustomerCheckoutView extends View {
 	}
 	
 	private void submitOrder() {
-		//CONTROLLER STUFF
+		//CONTROLLER LOGIC FOR SUBMITTING AN ORDER
+		//SWITCH TO CREDIT CARD VIEW
 		this.getParent().switchView(4);
 	}
 	

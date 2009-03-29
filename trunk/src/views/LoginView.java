@@ -55,8 +55,8 @@ public class LoginView extends View {
 		
 		container = new Panel();
 		container.setBackground(bg3);
-		container.setLayout(new GridLayout(4,1));
-		container.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
+		container.setLayout(new GridLayout(8,1));
+		container.setPreferredSize(new Dimension(Short.MAX_VALUE,360));
 		this.getContainer().add(container, BorderLayout.NORTH);
 		
 		//label for Container
@@ -119,6 +119,25 @@ public class LoginView extends View {
 			loginRowPanel[i].add(subPanel3);
 		}
 		
+//Bottom Buttons
+		
+		Button dummy = new Button("Dummy");
+		dummy.addActionListener(new registerAction());
+		dummy.setVisible(false);
+		container.add(dummy);
+		
+		Button registerButton = new Button("Register Customer");
+		registerButton.addActionListener(new registerAction());
+		container.add(registerButton);
+		
+		Button inStoreButton = new Button("In Store Purchase");
+		inStoreButton.addActionListener(new inStoreAction());
+		container.add(inStoreButton);
+		
+		Button returnButton = new Button("Return");
+		returnButton.addActionListener(new returnAction());
+		container.add(returnButton);
+		
 		container.validate();
 		
 	}//Login PANELs
@@ -137,10 +156,18 @@ public class LoginView extends View {
 			this.getParent().switchView(2);
 			break;
 		}
-
 	}
 	
 	
+	public void register() {
+		this.getParent().switchView(5);
+	}
+	public void inStore() {
+		this.getParent().switchView(6);
+	}
+	public void returnFunction() {
+		this.getParent().switchView(7);
+	}
 	
 	
 	//LISTENERS
@@ -150,9 +177,29 @@ public class LoginView extends View {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < 3; i++) {
 				if (e.getSource() == loginButton[i]) {
+					
+					//Controller CODE FOR AUTHORIZATION GOES HERE
 					login(i);
 				}
 			}
+		}
+	}// END LISTENER
+	
+	public class registerAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			register();
+		}
+	}// END LISTENER
+	
+	public class inStoreAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			inStore();
+		}
+	}// END LISTENER
+	
+	public class returnAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			returnFunction();
 		}
 	}// END LISTENER
 	

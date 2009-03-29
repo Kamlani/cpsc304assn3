@@ -241,6 +241,7 @@ public class CustomerOnlineView extends View {
 	}//CREATE RESULT ROWS
 	
 	//UPDATE SHOULD BE CALLED AFTER YOU GET SEARCH RESULTS FROM DB IN THE LISTENER resultCheckAction
+	//Populate the cart by following the example in resultCheckAction
 	
 	private void update() {
 		for (int i = 0; i < totalResultRows; i++ ) {
