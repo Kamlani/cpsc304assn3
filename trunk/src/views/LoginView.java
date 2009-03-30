@@ -23,6 +23,8 @@ public class LoginView extends View {
 	private JFormattedTextField[] loginName;
 	private JFormattedTextField[] loginPass;
 	private Panel container;
+	
+	private int numLogins;
 
 	public LoginView (String title, MainView parent) {
 		
@@ -32,13 +34,15 @@ public class LoginView extends View {
 		setContainer();
 		setTitle(title);
 		
+		numLogins = 1;
+		
 		loginButton = new Button[3];
 		loginRowPanel = new Panel[3];
 		
 		loginText = new String[3];
-		loginText[0] = "Manager";
-		loginText[1] = "Clerk";
-		loginText[2] = "Customer";
+		loginText[0] = "Customer";
+		loginText[1] = "Manager";
+		loginText[2] = "Clerk";
 
 		loginName = new JFormattedTextField[3];
 		loginPass = new JFormattedTextField[3];
@@ -64,7 +68,7 @@ public class LoginView extends View {
 		thisTitle.setFont(font1);
 		container.add(thisTitle);
 		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < numLogins; i++) {
 			
 			loginRowPanel[i] = new Panel(new GridLayout(1,3));
 			container.add(loginRowPanel[i]);		
@@ -126,6 +130,14 @@ public class LoginView extends View {
 		dummy.setVisible(false);
 		container.add(dummy);
 		
+		Button managerButton = new Button("Manager Menu");
+		managerButton.addActionListener(new managerAction());
+		container.add(managerButton);
+		
+		Button shipButton = new Button("Shipment");
+		shipButton.addActionListener(new shipmentAction());
+		container.add(shipButton);
+		
 		Button registerButton = new Button("Register Customer");
 		registerButton.addActionListener(new registerAction());
 		container.add(registerButton);
@@ -158,7 +170,12 @@ public class LoginView extends View {
 		}
 	}
 	
-	
+	public void manager() {
+		this.getParent().switchView(1);
+	}
+	public void shipment() {
+		this.getParent().switchView(1);
+	}
 	public void register() {
 		this.getParent().switchView(5);
 	}
@@ -182,6 +199,18 @@ public class LoginView extends View {
 					login(i);
 				}
 			}
+		}
+	}// END LISTENER
+	
+	public class managerAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			manager();
+		}
+	}// END LISTENER
+	
+	public class shipmentAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			shipment();
 		}
 	}// END LISTENER
 	
