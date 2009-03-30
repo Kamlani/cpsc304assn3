@@ -116,7 +116,7 @@ public class CreditCardView extends View {
 		subPanel4.add(submitLabel);
 		
 		submitCardButton = new Button("Submit Card");
-		submitCardButton.addActionListener(new loginAction());
+		submitCardButton.addActionListener(new submitCardAction());
 		subPanel4.add(submitCardButton);
 		
 		cardInfoPanel.add(subPanel4);
@@ -127,16 +127,24 @@ public class CreditCardView extends View {
 		
 	}//Login PANELs
 	
-	
+	private void submitCard() {
+		//CONTROLLER LOGIC FOR CHECKING CREDIT CARD
+		
+		//IF SUCCESSFUL SEND TO RECEIPT VIEW
+		
+		this.getParent().switchView(8);
+		
+		
+	}
 	
 	
 	//LISTENERS
 	
 	
-	public class loginAction implements ActionListener { 
+	public class submitCardAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			
-			
+			submitCard();
 			
 		}
 	}// END LISTENER

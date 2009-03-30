@@ -17,7 +17,7 @@ public class ResultSet {
         private Color bg2;
         private Color bg3;
 
-        public ResultSet (String header, String[] titles, String[][] results, int cellWidth) {
+        public ResultSet (Object header, Object[] titles, Object[][] results, int cellWidth) {
                 int width = results[0].length * cellWidth;
                 int height = results.length * 24;
                 
@@ -28,7 +28,7 @@ public class ResultSet {
                 container = new Panel();
                 container.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
                 
-                Label label = new Label(header);
+                Label label = new Label((String)header);
                 label.setBackground(bg1);
                 label.setFont(new Font("Arial", Font.BOLD, 24));
                 container.add(label);
@@ -47,28 +47,28 @@ public class ResultSet {
                 
         }
         
-        public void setTitles (String[] titles) {
+        public void setTitles (Object[] titles) {
                 
                 headers = new Panel();
                 headers.setLayout(new GridLayout(1,titles.length));
                 container.add(headers);
                 
                 for (int i = 0; i < titles.length; i++) {
-                        Label title = new Label(titles[i]);
+                        Label title = new Label((String)titles[i]);
                         title.setBackground(bg3);
                         title.setFont(new Font("Arial", Font.BOLD, 16));
                         headers.add(title);
                 }
         }
         
-        public void updateResults (String[][] results) {
+        public void updateResults (Object[][] results) {
                 
                 innerContainer.removeAll();
                 
                 for (int i = 0; i < results.length; i++) {
                         for (int j = 0; j < results[0].length; j++) {
                                 
-                                JTextArea thisText = new JTextArea(results[i][j]);
+                                JTextArea thisText = new JTextArea((String)results[i][j]);
                                 if (i % 2 == 0)
                                         thisText.setBackground(bg2);
                                 else
