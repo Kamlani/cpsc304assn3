@@ -182,7 +182,7 @@ public class Transactions {
 		}
 	}
 	
-	public static void main(String[] args)
+/*	public static void main(String[] args)
 	{
 		try
 		{
@@ -193,5 +193,5 @@ public class Transactions {
 			SQLException e = (SQLException) ex;
 			Transactions.printSQLError(e);
 		}
-	}
+	}*/
 }
