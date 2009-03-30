@@ -9,9 +9,9 @@ public class ResultSet {
 
         private static final long serialVersionUID = 1L;
         
-        private Panel container;
-        private Panel headers;
-        private Panel innerContainer;
+        private JPanel container;
+        private JPanel headers;
+        private JPanel innerContainer;
         
         private Color bg1;
         private Color bg2;
@@ -25,17 +25,17 @@ public class ResultSet {
                 bg2 = new Color(196,196,196);
                 bg3 = new Color(223,223,223);
                 
-                container = new Panel();
+                container = new JPanel();
                 container.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
                 
-                Label label = new Label((String)header);
+                JLabel label = new JLabel((String)header);
                 label.setBackground(bg1);
                 label.setFont(new Font("Arial", Font.BOLD, 24));
                 container.add(label);
                 
                 setTitles(titles);
                 
-                innerContainer = new Panel();
+                innerContainer = new JPanel();
                 innerContainer.setPreferredSize(new Dimension(width,height));           
                 innerContainer.setLayout(new GridLayout(results.length, results[0].length));
                 container.add(innerContainer);
@@ -49,12 +49,12 @@ public class ResultSet {
         
         public void setTitles (Object[] titles) {
                 
-                headers = new Panel();
+                headers = new JPanel();
                 headers.setLayout(new GridLayout(1,titles.length));
                 container.add(headers);
                 
                 for (int i = 0; i < titles.length; i++) {
-                        Label title = new Label((String)titles[i]);
+                        JLabel title = new JLabel((String)titles[i]);
                         title.setBackground(bg3);
                         title.setFont(new Font("Arial", Font.BOLD, 16));
                         headers.add(title);
@@ -83,7 +83,7 @@ public class ResultSet {
                 container.validate();
         }
         
-        public Panel getContainer() {
+        public JPanel getContainer() {
                 return container;               
         }
 }

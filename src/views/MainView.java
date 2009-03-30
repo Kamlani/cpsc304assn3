@@ -110,7 +110,6 @@ public final class MainView {
 		for (int i = 0; i < numViews; i++) {
 			buttons[i] = new Button(buttonText[i]);
 			buttons[i].addActionListener(new buttonAction());
-			buttons[i].setVisible(false);
 			buttonContainer.add(buttons[i]);
 		}
 	
@@ -133,54 +132,6 @@ public final class MainView {
         }
 	}//END LISTENER
 	
-	
-	
-	//PRIVATE HELPERS FOR SETTING BUTTON VISIBILITY
-	
-	private void clearButtons() {
-		for (int i = 0; i < numViews; i++) {
-			buttons[i].setVisible(false);
-		}
-	}
-	
-	private void setButtonVisibility(int view) {
-		switch (view) {
-			case 0: clearButtons();
-				break;
-			case 1: clearButtons();
-				buttons[0].setVisible(true);
-				break;
-			case 2: clearButtons();
-				buttons[0].setVisible(true);
-				buttons[2].setVisible(true);
-				buttons[3].setVisible(true);
-				break;
-			case 3: clearButtons();
-				buttons[0].setVisible(true);
-				buttons[2].setVisible(true);
-				buttons[3].setVisible(true);
-			break;
-			case 4: clearButtons();
-				buttons[0].setVisible(true);
-				buttons[4].setVisible(true);
-			break;
-			case 5: clearButtons();
-				buttons[0].setVisible(true);
-			break;
-			case 6: clearButtons();
-				buttons[0].setVisible(true);
-			break;
-			case 7: clearButtons();
-				buttons[0].setVisible(true);
-			break;
-			case 8: clearButtons();
-				buttons[0].setVisible(true);
-			break;
-		}
-		mainFrame.validate();
-	}
-	
-	
 	//PUBLIC METHODS FOR SWITCH VIEWS
 	
 	public void switchView (int view) {
@@ -193,8 +144,9 @@ public final class MainView {
 			currentView = views[view];
 			mainFrame.add(currentView.getView());
 		}
+		//UPDATE VIEWS
 		((CustomerCheckoutView)views[3]).update();
-		setButtonVisibility(view);
+		mainFrame.validate();
 	}//SWITCH VIEW
 	
 	
@@ -246,5 +198,52 @@ public final class MainView {
 		cid = newID;
 	}
 	
+	
+	
+	
+//PRIVATE HELPERS FOR SETTING BUTTON VISIBILITY ACCESS CONTROL DEPRECIATED
+	
+//	private void clearButtons() {
+//		for (int i = 0; i < numViews; i++) {
+//			buttons[i].setVisible(false);
+//		}
+//	}
+//	
+//	private void setButtonVisibility(int view) {
+//		switch (view) {
+//			case 0: clearButtons();
+//				break;
+//			case 1: clearButtons();
+//				buttons[0].setVisible(true);
+//				break;
+//			case 2: clearButtons();
+//				buttons[0].setVisible(true);
+//				buttons[2].setVisible(true);
+//				buttons[3].setVisible(true);
+//				break;
+//			case 3: clearButtons();
+//				buttons[0].setVisible(true);
+//				buttons[2].setVisible(true);
+//				buttons[3].setVisible(true);
+//			break;
+//			case 4: clearButtons();
+//				buttons[0].setVisible(true);
+//				buttons[4].setVisible(true);
+//			break;
+//			case 5: clearButtons();
+//				buttons[0].setVisible(true);
+//			break;
+//			case 6: clearButtons();
+//				buttons[0].setVisible(true);
+//			break;
+//			case 7: clearButtons();
+//				buttons[0].setVisible(true);
+//			break;
+//			case 8: clearButtons();
+//				buttons[0].setVisible(true);
+//			break;
+//		}
+//		
+//	}
 
 }
