@@ -42,7 +42,7 @@ public final class MainView {
 		setFrame("CPSC 304 Assn3 Main View", 960, 600);		
 		addTitle("CPSC 304 Assn3 Main View");
 		
-		numViews = 8;
+		numViews = 9;
 		viewTitles = new String[numViews];
 		views = new View[numViews];
 		buttons = new Button[numViews];
@@ -55,7 +55,8 @@ public final class MainView {
 		viewTitles[4] = "CreditCardView: ";
 		viewTitles[5] = "RegisterView: ";
 		viewTitles[6] = "InStoreView: ";
-		viewTitles[7] = "returnView: ";
+		viewTitles[7] = "ReturnView: ";
+		viewTitles[7] = "ReceiptView: ";
 		
 		views[0] = new LoginView(viewTitles[0], thisMainView);
 		views[1] = new ManagerView(viewTitles[1], thisMainView);
@@ -65,6 +66,7 @@ public final class MainView {
 		views[5] = new RegisterView(viewTitles[5], thisMainView);
 		views[6] = new InStoreView(viewTitles[6], thisMainView);		
 		views[7] = new ReturnView(viewTitles[7], thisMainView);
+		views[8] = new CustomerReceiptView(viewTitles[7], thisMainView);
 		
 		buttonText[0] = "LoginView";
 		buttonText[1] = "Manager";
@@ -74,6 +76,7 @@ public final class MainView {
 		buttonText[5] = "Register Customer";
 		buttonText[6] = "In Store Customer";
 		buttonText[7] = "Customer Return";
+		buttonText[8] = "Customer Receipt";
 		
 		addButtons();
 		
@@ -168,6 +171,9 @@ public final class MainView {
 				buttons[0].setVisible(true);
 			break;
 			case 7: clearButtons();
+				buttons[0].setVisible(true);
+			break;
+			case 8: clearButtons();
 				buttons[0].setVisible(true);
 			break;
 		}
