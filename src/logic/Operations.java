@@ -2,6 +2,8 @@ package logic;
 
 import java.sql.*;
 import java.math.*;
+import java.util.*;
+import java.util.Date;
 
 public class Operations 
 {
@@ -21,44 +23,102 @@ public class Operations
 		return instance;
 	}
 	
+	
+	
+	
+	
+	
+	
 	// Clerk
 	
-	// returns true if cash purchase or if credit purchase is valid. Returns false if credit purchase is invalid. IE request for cash!
-	protected boolean PurchaseItems(boolean isCash, Date date, String cid, String name, BigDecimal cardNum, Date expire) throws SQLException
+	/* Takes in if its a cash or not, customer ID, name, cardNumber, and a JAVA.SQL.DATE expiry, array of UPC and quantity items (same size)
+	 * @returns true if cash purchase OR if credit purchase is valid. Returns false if credit purchase is invalid. IE request for cash if false!
+	 */
+	protected int inStorePurchase(boolean isCash, String cid, String name, BigDecimal cardNum, java.sql.Date expire, BigDecimal[] UPC, int quatity[]) throws SQLException
 	{
+		java.util.Date currentdate = new java.util.Date();
+		java.sql.Date date = new java.sql.Date(currentdate.getTime());
+		
 		if(isCash)
 		{
-			sql.Transactions.insertCashPurchase(date, cid, name);
-			return true;
+			int recieptID = sql.Transactions.insertCashPurchase(date, cid, name);
+			
+			for(int i = 0; i < UPC.length; i++)
+				sql.Transactions.addItemToPurchase(recieptID, UPC[i], quatity[i]);
+			
+			return recieptID;
 		}
 		else		
 		{
 			if(Math.random() >= 0.5) // 50/50 chance the credit card is valid
 				{
-					sql.Transactions.insertCreditPurchase(expire, cid, name, cardNum, expire);
-					return true;
+					int recieptID = sql.Transactions.insertCreditPurchase(expire, cid, name, cardNum, expire);
+					
+					for(int i = 0; i < UPC.length; i++)
+						sql.Transactions.addItemToPurchase(recieptID, UPC[i], quatity[i]);
+					
+					return recieptID;
 				}
 		}
-		return false;		
+		return -1;		
 	}
 	
-	protected void ReturnItem()
+	
+	
+	/*
+	 * Takes the recieptID and name, inserts a return at the current date, adds return item for all
+	 * @Return the returnID, -1 otherwise
+	 */	
+	protected int processReturn(int recieptId, String name, BigDecimal[] UPC, int[] quantity) throws SQLException 
 	{
+		java.util.Date currentdate = new java.util.Date();
+		java.sql.Date curDate = new java.sql.Date(currentdate.getTime());
 		
+		int returnID = sql.Transactions.insertReturn(curDate, recieptId, name);
+		
+		if(returnID != -1)
+		{
+			for(int i = 0; i < UPC.length; i++)
+				sql.Transactions.addItemToReturn(returnID, UPC[i], quantity[i]);
+		}
+		
+		return returnID;
 	}
+	
+
 	
 	// Customer
+	
+	/*
+	 * Takes the customerID, name, and creditcard info. inserts a return at the current date, adds all items to be purchased 
+	 * @Return the receiptID, -1 if creditcard rejected
+	 */		
+	protected int PurchaseOnlineItems(String cid, String name, BigDecimal cardNum, java.sql.Date expire, BigDecimal[] UPC, int quantity[] ) throws SQLException
+	{
+		
+		java.util.Date currentdate = new java.util.Date();
+		java.sql.Date date = new java.sql.Date(currentdate.getTime());
+		
+		java.sql.Date expected = new java.sql.Date(currentdate.getTime() + 1000000);
+		
+		if(Math.random() >= 0.5) // 50/50 chance the credit card is valid
+		{
+			int recieptID = sql.Transactions.insertOnlinePurchase(date, cid, name, cardNum, expire, expected);
+			
+			for(int i = 0; i < UPC.length; i++)
+				sql.Transactions.addItemToPurchase(recieptID, UPC[i], quantity[i]);	
+			return recieptID;
+		}
+		
+		return -1;		
+	}
+	
 	protected void Register()
 	{
 		
 	}
-	
-	protected void PurchaseOnlineItems(Date date, String cid, String name, BigDecimal cardNum, Date expire, Date expected) throws SQLException
-	{
-		sql.Transactions.insertOnlinePurchase(date, cid, name, cardNum, expire, expected);
-	}
-	
-	
+
+			
 	// Manager
 	protected void AddRemoveSupplier()
 	{
