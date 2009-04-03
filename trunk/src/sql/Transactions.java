@@ -758,7 +758,7 @@ public class Transactions {
 	}
 	
 	
-	// Inserts an Lead Singer for Item (ie. UPC) - Jomat
+	// Inserts a Lead Singer for Item (ie. UPC) - Jomat
 	public static void insertLeadSinger(BigDecimal upc, String name) throws SQLException
 	{
 		String sql = "INSERT INTO LeadSinger VALUES(?, ?)" ;
@@ -767,6 +767,34 @@ public class Transactions {
 			PreparedStatement ps = dbConn.prepareStatement(sql);
 			ps.setBigDecimal(1, upc);
 			ps.setString(2, name);
+			ps.executeUpdate();
+			dbConn.commit();
+			ps.close();
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
+	
+	
+	// Inserts a Song for Item (ie. UPC) - Jomat
+	public static void insertHasSong(BigDecimal upc, String title) throws SQLException
+	{
+		String sql = "INSERT INTO HasSong VALUES(?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setBigDecimal(1, upc);
+			ps.setString(2, title);
 			ps.executeUpdate();
 			dbConn.commit();
 			ps.close();
