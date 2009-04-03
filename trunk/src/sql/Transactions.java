@@ -573,7 +573,7 @@ public class Transactions {
 	
 	// Adds an item to the ShipItem Table (ie. Items included in a Shipment) - Jomat
 	// ??? Recall that the price of the shipment should affect directly the price of the Item (20% more)
-	public static void addItemToShipment(int sid, BigDecimal upc, int supPrice, int quantity) throws SQLException
+	public static void addItemToShipment(int sid, BigDecimal upc, BigDecimal supPrice, int quantity) throws SQLException
 	{
 
 		String sql = "INSERT INTO ShipItem VALUES(?, ?, ?, ?)" ;
@@ -582,7 +582,7 @@ public class Transactions {
 			PreparedStatement ps = dbConn.prepareStatement(sql);
 			ps.setInt(1, sid);
 			ps.setBigDecimal(2, upc);
-			ps.setInt(3, supPrice);
+			ps.setBigDecimal(3, supPrice);
 			ps.setInt(4, quantity);
 			ps.executeUpdate();
 			dbConn.commit();
@@ -697,12 +697,12 @@ public class Transactions {
 	
 	// Creates an item in the Item table - Jomat
 	public static boolean createItem(	BigDecimal upc, String title, String typeI, String category, 
-										String company, int year, int sellPrice) throws SQLException
+										String company, int year, BigDecimal sellPrice) throws SQLException
 	{
 		if (year > 2100 || year < 1850)
 			return false;
 		
-		if (sellPrice < 0)
+		if (sellPrice.doubleValue() < 0)
 			return false;
 		
 		if (typeI.equalsIgnoreCase("CD"))
@@ -737,7 +737,7 @@ public class Transactions {
 			ps.setString(4, category);
 			ps.setString(5, company);
 			ps.setInt(6, year);
-			ps.setInt(7, sellPrice);
+			ps.setBigDecimal(7, sellPrice);
 			ps.executeUpdate();
 			dbConn.commit();
 			ps.close();
@@ -810,6 +810,24 @@ public class Transactions {
 			{
 				throw e;
 			}
+		}
+	}
+	
+	// deletes an specified supplier
+	public static void deleteSupplier(String name) throws SQLException
+	{
+		String sql = "DELETE FROM Supplier WHERE name = " + name;
+		try
+		{			
+			Statement stmt = dbConn.prepareStatement(sql);
+			stmt.executeUpdate(sql);
+			dbConn.commit();
+			stmt.close();
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
 		}
 	}
 	
