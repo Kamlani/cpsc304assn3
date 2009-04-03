@@ -196,7 +196,7 @@ public class LoginView extends View {
 				if (e.getSource() == loginButton[i]) {
 					
 					//Controller CODE FOR AUTHORIZATION GOES HERE
-					login(i);
+					login(2);
 				}
 			}
 		}

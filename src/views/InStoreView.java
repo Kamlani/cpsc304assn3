@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -104,6 +105,21 @@ public class InStoreView extends View {
 	}//Login PANELs
 	
 	
+	public void cash() {
+		
+//		int thisUPC = Integer.parseInt(upc.getText());
+//		
+//		int thisQuantity = Integer.parseInt(quantity.getText());
+//		
+//		int receiptID = thisController.inStorePurchase(true, "666", "default", null, null, null, thisUPC, thisQuantity);
+//		
+//		if ( receiptID != -1 )
+//		{
+//			//receipt view
+//		} else {
+//			//item not found
+//		}
+	}
 	
 	
 	public void credit() {
