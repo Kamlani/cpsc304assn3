@@ -813,10 +813,29 @@ public class Transactions {
 		}
 	}
 	
-	// deletes an specified supplier
+	// deletes an specified supplier - Jomat
 	public static void deleteSupplier(String name) throws SQLException
 	{
 		String sql = "DELETE FROM Supplier WHERE name = " + name;
+		try
+		{			
+			Statement stmt = dbConn.prepareStatement(sql);
+			stmt.executeUpdate(sql);
+			dbConn.commit();
+			stmt.close();
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
+	
+	
+	// process the delivery of the order (ie. Purchase) - Jomat
+	public static void deliveryOrder(int receiptId, Date deliveredDate) throws SQLException
+	{
+		String sql = "UPDATE Purchase SET deliveredDate = " + deliveredDate + " WHERE receiptId = " + receiptId;
 		try
 		{			
 			Statement stmt = dbConn.prepareStatement(sql);
