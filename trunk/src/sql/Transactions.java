@@ -416,7 +416,7 @@ public class Transactions {
 	}
 	
 	// creation of the username by the customer online - Jomat Ok
-	public static void createUsername(String cid, String password, String name, String address, int phone) throws SQLException
+	public static void createUsername(String cid, String password, String name, String address, String phone) throws SQLException
 	{
 		String sql = "INSERT INTO Customer VALUES( ?, ?, ?, ?, ?)" ;
 			try
@@ -426,7 +426,7 @@ public class Transactions {
 				ps.setString(2, password);
 				ps.setString(3, name);
 				ps.setString(4, address);
-				ps.setInt(5, phone);
+				ps.setString(5, phone);
 				ps.executeUpdate();
 				dbConn.commit();
 	            ps.close();
