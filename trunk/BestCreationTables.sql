@@ -1,15 +1,38 @@
 
+---- ***** DROP ALL TABLES ***** ----
+DROP TABLE ReturnItem;
+DROP TABLE PurchaseItem;
+DROP TABLE LeadSinger;
+DROP TABLE HasSong;
+DROP TABLE ShipItem;
+DROP TABLE Shipment;
+DROP TABLE Stored;
+DROP TABLE ReturnP;
+DROP TABLE Purchase;
+DROP TABLE Customer;
+DROP TABLE Item;
+DROP TABLE Supplier;
+DROP TABLE Store;
+
+DROP SEQUENCE shipment_counter;
+DROP SEQUENCE receiptId_counter;
+DROP SEQUENCE returnId_counter;
+
+---- ***** CREATE ALL TABLES ***** ----
+
 -- Entity Table
-CREATE TABLE Item( 
+CREATE TABLE Item(
 upc DECIMAL(12,0) PRIMARY KEY, 
 title VARCHAR(30) NOT NULL,
 typeI VARCHAR(3) NOT NULL,
 category VARCHAR(15) NOT NULL, 
 company VARCHAR(30), 
-yearI DATE NOT NULL, 
+yearI INT NOT NULL, 
 sellPrice DECIMAL(10,2) NOT NULL,
 CONSTRAINT Cons_CDDVD_TypeI CHECK (typeI IN ('CD', 'DVD')),
-CONSTRAINT Cons_Category CHECK (category IN ('Pop', 'Rock', 'Rap', 'Country', 'Classical', ' New Age', 'Instrumental')) );
+CONSTRAINT Cons_Category CHECK (category IN ('Pop', 'Rock', 'Rap', 'Country', 'Classical', ' New Age', 'Instrumental')),
+CONSTRAINT Cons_Year CHECK (yearI BETWEEN 1850 AND 2100),
+CONSTRAINT Cons_SellPrice CHECK ( sellPrice > 0 ) );
 
 -- Entity Table
 CREATE TABLE Supplier(
@@ -23,7 +46,8 @@ CONSTRAINT Cons_Bool_Status CHECK (status IN ('Y', 'N')) );
 CREATE TABLE Store(
 name VARCHAR(30) PRIMARY KEY,
 address VARCHAR(30),
-typeS VARCHAR(3) NOT NULL);
+typeS VARCHAR(3) NOT NULL,
+CONSTRAINT Cons_TypeS CHECK (typeS IN ('ONL', 'STO') ) );
 
 -- Entity Table
 CREATE TABLE Customer(
@@ -38,14 +62,16 @@ CREATE TABLE LeadSinger(
 upc DECIMAL(12,0), 
 name VARCHAR(30),
 PRIMARY KEY (upc, name),
-FOREIGN KEY (upc) REFERENCES Item);
+FOREIGN KEY (upc) REFERENCES Item 
+ON DELETE CASCADE);
 
 -- Relationship Table
 CREATE TABLE HasSong(
 upc DECIMAL(12,0),
 title VARCHAR(30),
 PRIMARY KEY (upc, title),
-FOREIGN KEY (upc) REFERENCES Item);
+FOREIGN KEY (upc) REFERENCES Item
+ON DELETE CASCADE);
 
 -- Entity Table
 CREATE TABLE Shipment(
@@ -63,7 +89,8 @@ supPrice DECIMAL(10,2) NOT NULL,
 quantity INTEGER NOT NULL,
 PRIMARY KEY (sid, upc),
 FOREIGN KEY (sid) REFERENCES Shipment,
-FOREIGN KEY (upc) REFERENCES Item);
+FOREIGN KEY (upc) REFERENCES Item,
+CONSTRAINT Cons_Quantity_Ship CHECK ( quantity > 0 ) );
 
 -- Relationship Table
 CREATE TABLE Stored(
@@ -72,28 +99,30 @@ upc DECIMAL(12,0),
 stock INTEGER NOT NULL,
 PRIMARY KEY (name, upc),
 FOREIGN KEY (name) REFERENCES Store,
-FOREIGN KEY (upc) REFERENCES Item);
+FOREIGN KEY (upc) REFERENCES Item,
+CONSTRAINT Cons_Stock CHECK ( stock > 0 ) );
 
 -- Entity Table
 CREATE TABLE Purchase(
 receiptId INTEGER PRIMARY KEY,
 dateP DATE NOT NULL,
-cid VARCHAR (12),      -- NEED SOMETHING IN CASE IS CUSTOMER IN STORE (NULL OR DEFAULT) What about Foreign Key
+cid VARCHAR (12) DEFAULT 'StoreClient', 	-- Default Name for Customer Buying in Store
 name VARCHAR(30) NOT NULL,
-cardNo DECIMAL (16,0),     -- (Minus One <=> -1) will represent CASH
-expire DATE,
-expectedDate DATE,
-deliveredDate DATE,
-FOREIGN KEY (cid) REFERENCES Customer,  -- NEED SOMETHING IN CASE IS CUSTOMER IN STORE
+cardNo DECIMAL (16,0) DEFAULT 0,    	-- 0 Represents Cash. Otherwise, Credit Card
+expire DATE DEFAULT NULL,
+expectedDate DATE DEFAULT NULL,
+deliveredDate DATE DEFAULT NULL,
+FOREIGN KEY (cid) REFERENCES Customer,
 FOREIGN KEY (name) REFERENCES Store);
 
 -- Relationship Table
-CREATE TABLE PuchaseItem(
+CREATE TABLE PurchaseItem(
 receiptId INTEGER,
 upc DECIMAL(12,0),
 quantity INTEGER NOT NULL,
 FOREIGN KEY (receiptID) REFERENCES Purchase,
-FOREIGN KEY (upc) REFERENCES Item);
+FOREIGN KEY (upc) REFERENCES Item,
+CONSTRAINT Cons_Quantity_Purchase CHECK ( quantity > 0 ) );
 
 -- Entity Table
 CREATE TABLE ReturnP(
@@ -101,7 +130,7 @@ retId INTEGER PRIMARY KEY,
 dateR DATE NOT NULL,
 receiptId INTEGER NOT NULL,
 name VARCHAR(30) NOT NULL,
-FOREIGN KEY (receiptID) REFERENCES Purchase,
+FOREIGN KEY (receiptID) REFERENCES Purchase,	-- Dont put ON DELETE CASCADE since there is no option to delete Purchase. More constraining to preserve Data Integrity
 FOREIGN KEY (name) REFERENCES STORE );
 
 -- Relationship Table
@@ -110,7 +139,9 @@ retId INTEGER,
 upc DECIMAL(12,0),
 quantity INTEGER NOT NULL,
 FOREIGN KEY (retId) REFERENCES ReturnP,
-FOREIGN KEY (upc) REFERENCES Item );
+FOREIGN KEY (upc) REFERENCES Item,
+CONSTRAINT Cons_Quantity_Return CHECK ( quantity > 0 ) );
+
 
 ---- ***** SEQUENCES ***** ----
 CREATE SEQUENCE shipment_counter
@@ -130,12 +161,3 @@ START WITH    1
 INCREMENT BY  1
 NOCYCLE
 ORDER;
-
--- CREATE TABLE suppliers(
--- supplier_id numeric(4),
--- supplier_name varchar2(50),
--- CONSTRAINT check_supplier_id CHECK (supplier_id BETWEEN 100 and 9999) );
-
--- ALTER TABLE suppliers
--- add CONSTRAINT check_supplier_name
--- CHECK (supplier_name IN ('IBM', 'Microsoft', 'NVIDIA'))
