@@ -5,11 +5,13 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Vector;
 
+import logic.Operations;
+
 public final class MainView {
 	
 	private static MainView thisMainView;
 	
-	private static String thisController; //CHANGE TO CONTROLLER REFERENCE
+	private static Operations thisController; //CONTROLLER REFERENCE
 
 	
 	//VIEW AND BUTTON INFORMATION DON'T EDIT
@@ -56,7 +58,8 @@ public final class MainView {
 		viewTitles[5] = "RegisterView: ";
 		viewTitles[6] = "InStoreView: ";
 		viewTitles[7] = "ReturnView: ";
-		viewTitles[7] = "ReceiptView: ";
+		viewTitles[8] = "ReceiptView: ";
+		viewTitles[9] = "ShipmentView: ";
 		
 		views[0] = new LoginView(viewTitles[0], thisMainView);
 		views[1] = new ManagerView(viewTitles[1], thisMainView);
@@ -66,8 +69,9 @@ public final class MainView {
 		views[5] = new RegisterView(viewTitles[5], thisMainView);
 		views[6] = new InStoreView(viewTitles[6], thisMainView);		
 		views[7] = new ReturnView(viewTitles[7], thisMainView);
-		views[8] = new CustomerReceiptView(viewTitles[7], thisMainView);
-		
+		views[8] = new CustomerReceiptView(viewTitles[8], thisMainView);
+		views[9] = new ManagerView(viewTitles[9], thisMainView);
+
 		buttonText[0] = "LoginView";
 		buttonText[1] = "Manager";
 		buttonText[2] = "Customer Online";
@@ -77,7 +81,8 @@ public final class MainView {
 		buttonText[6] = "In Store Customer";
 		buttonText[7] = "Customer Return";
 		buttonText[8] = "Customer Receipt";
-		
+		buttonText[9] = "Shipment Control";
+
 		addButtons();
 		
 		currentView = views[0];
@@ -152,7 +157,7 @@ public final class MainView {
 	
 	//PUBLIC METHODS FOR GETTING THE CONTROLLER, ADDING ITEMS TO CART, GETTING VIEWS
 	
-	public String getController() {
+	public Operations getController() {
 		return thisController;		
 	}
 	

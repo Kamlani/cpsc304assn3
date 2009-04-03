@@ -2,11 +2,13 @@ package views;
 
 import java.awt.*;
 
+import logic.Operations;
+
 public class View {
 	
 	private MainView thisParent;
 	
-	private String thisController;
+	public Operations thisController;
 	
 	private Panel mainContainer;
 	private Panel container;
