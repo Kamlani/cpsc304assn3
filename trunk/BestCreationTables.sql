@@ -79,7 +79,8 @@ sid INTEGER PRIMARY KEY,
 supName VARCHAR(30),
 name VARCHAR(30) NOT NULL,
 shipDate DATE NOT NULL,
-FOREIGN KEY (name) REFERENCES Store);
+FOREIGN KEY (name) REFERENCES Store,
+FOREIGN KEY (supName) REFERENCES Supplier);
 
 -- Relationship Table
 CREATE TABLE ShipItem(
