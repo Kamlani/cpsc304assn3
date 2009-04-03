@@ -563,9 +563,40 @@ public class Transactions {
 	}
 	
 	
+	// Adds an item to the ShipItem Table (ie. Items included in a Shipment) - Jomat
+	// ??? Recall that the price of the shipment should affect directly the price of the Item (20% more)
+	public static void addItemToShipment(int sid, BigDecimal upc, int supPrice, int quantity) throws SQLException
+	{
+
+		String sql = "INSERT INTO ShipItem VALUES(?, ?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setInt(1, sid);
+			ps.setBigDecimal(2, upc);
+			ps.setInt(3, supPrice);
+			ps.setInt(4, quantity);
+			ps.executeUpdate();
+			dbConn.commit();
+			ps.close();
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
 	
 	
-	
+
+// # # #   MAIN   # # #  ///
 	
 	public static void main(String[] args)
 	{
