@@ -440,7 +440,133 @@ public class Transactions {
 		
 	}
 	
+	
+	//****//
+	
+	// function to create a shipment (ie insert into Shipment) - Jomat
+	public static int insertShipment(String supName, String storeName, Date shipDate) throws SQLException
+	{
+		String sql = "INSERT INTO Shipment VALUES( shipment_counter.nextval, ?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setString(1, supName);
+			ps.setString(2, storeName);
+			ps.setDate(3, shipDate);
+			ps.executeUpdate();
+			int ShipmentId = getCurrentShipmentID();	// commit is issued inside the function
+			ps.close();
+			return ShipmentId;
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
 
+	
+	// to get the latest sid - Jomat
+	private static int getCurrentShipmentID() throws SQLException
+	{
+		String sql = "SELECT shipment_counter.currval as currentVal FROM Shipment";
+		try
+		{
+			Statement stmt = dbConn.createStatement();
+			ResultSet dbResult = stmt.executeQuery(sql);
+			dbConn.commit();
+			dbResult.next();
+			return dbResult.getInt("currentVal");	
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
+	
+	
+	// function to create a Store - Jomat
+	public static String insertStore(String name, String address, String type) throws SQLException
+	{
+		if (type.equalsIgnoreCase("ONL"))
+		{ 
+			type = "ONL";
+		}
+		else
+		{
+			if (type.equalsIgnoreCase("STO"))
+			{
+				type = "STO";
+			}
+			else
+			{
+				return "WRONG TYPE";
+			}
+		}
+		
+		String sql = "INSERT INTO Store VALUES( ?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setString(3, type);
+			ps.executeUpdate();
+			ps.close();
+			return name;
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
+	
+	
+	// function to create a Supplier - Jomat
+	public static String insertSupplier(String name, String address, String city, String status) throws SQLException
+	{
+		if (status.equalsIgnoreCase("Y"))
+		{ 
+			status = "Y";
+		}
+		else
+		{
+			if (status.equalsIgnoreCase("N"))
+			{
+				status = "N";
+			}
+			else
+			{
+				return "WRONG STATUS";
+			}
+		}
+		
+		String sql = "INSERT INTO Supplier VALUES( ?, ?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setString(3, city);
+			ps.setString(4, status);
+			ps.executeUpdate();
+			ps.close();
+			return name;
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
+	
+	
+	
+	
+	
+	
 	public static void main(String[] args)
 	{
 		try
