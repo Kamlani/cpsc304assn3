@@ -55,7 +55,7 @@ cid VARCHAR (12) PRIMARY KEY,
 password VARCHAR (12) NOT NULL,
 name VARCHAR (20) NOT NULL,
 address VARCHAR(30) NOT NULL,
-phone DECIMAL (10,0) );
+phone VARCHAR (10) );
 
 -- Relationship Table
 CREATE TABLE LeadSinger( 
