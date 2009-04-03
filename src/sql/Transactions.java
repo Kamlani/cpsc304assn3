@@ -188,6 +188,7 @@ public class Transactions {
 		}
 	}
 	
+	
 	// to verify that the receipt exists before executing a return - Jomat Ok
 	private static boolean checkReceiptIDReturn(int recieptId) throws SQLException
 	{
@@ -208,6 +209,7 @@ public class Transactions {
 		}
 
 	}
+	
 	
 	// inserting a new return document - Jomat Ok
 	private static boolean checkDateReturn (int recieptId) throws SQLException
@@ -286,6 +288,7 @@ public class Transactions {
 		
 	}
 	
+	
 	// Get information about the payment type - Jomat Ok
 	// Returns the credit card number or 0 for cash
 	public static long returnCashCredit(int recieptId) throws SQLException
@@ -309,6 +312,7 @@ public class Transactions {
 		}
 	}
 	
+	
 	// to get the latest retId from ReturnP table - Jomat Ok
 	private static int getCurrentReturnID() throws SQLException
 	{
@@ -329,6 +333,7 @@ public class Transactions {
 		}
 
 	}
+	
 	
 	// obtain the receiptId from the ReturnP table Ok
 	private static int getReceiptIdFromReturn(int retId) throws SQLException
@@ -351,6 +356,7 @@ public class Transactions {
 
 	}
 
+	
 	// Adds an item to the Return document - Jomat Ok
 	public static void addItemToReturn(int retId, BigDecimal upc, int quantity) throws SQLException
 	{
@@ -383,6 +389,7 @@ public class Transactions {
 		}
 	}
 			
+	
 	// to verify that the receipt contains the item that is being returned before executing a return - Jomat Ok
 	private static boolean checkItemIDReturn(int recieptId, BigDecimal upc, int quantity) throws SQLException
 	{
@@ -414,6 +421,7 @@ public class Transactions {
 			return false;
 		}
 	}
+	
 	
 	// creation of the username by the customer online - Jomat Ok
 	public static void createUsername(String cid, String password, String name, String address, String phone) throws SQLException
@@ -595,7 +603,189 @@ public class Transactions {
 	}
 	
 	
+	// Adds an item to a Store inserting the information to Stored Table (ie. Keeps the inventory) - Jomat
+	// To add or subtract quantity from an item in a store, use modifyQuantityItemStore
+	public static void insertItemToStore(String name, BigDecimal upc, int stock) throws SQLException
+	{
 
+		String sql = "INSERT INTO Stored VALUES(?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setBigDecimal(2, upc);
+			ps.setInt(3, stock);
+			ps.executeUpdate();
+			dbConn.commit();
+			ps.close();
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
+	
+	
+	// Modifies the quantity (Positive or Negatively) of an Item in a Store (ie. Shipment or Purchase Processes) - Jomat
+	// To modify directly the quantity use insertItemToStore
+	// incrementDecrement can takes values between -oo to +oo. Which means: Negative (Substract) and Positive (Add)
+	public static boolean modifyQuantityItemStore(String name, BigDecimal upc, int incrementDecrement) throws SQLException
+	{
+
+		String sql = "INSERT INTO Stored VALUES(?, ?, ?)" ;
+		try
+		{			
+			int tempQuantity = getQuantityItemStore(name, upc) + incrementDecrement;
+			if (tempQuantity >= 0)
+			{
+				PreparedStatement ps = dbConn.prepareStatement(sql);
+				ps.setString(1, name);
+				ps.setBigDecimal(2, upc);
+				ps.setInt(3, tempQuantity);
+				ps.executeUpdate();
+				dbConn.commit();
+				ps.close();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
+
+		
+	// to get the quantity of an Item in a Store - Jomat
+	private static int getQuantityItemStore(String name, BigDecimal upc) throws SQLException
+	{
+		String sql = "SELECT SUM(stock) AS totalStock FROM Stored WHERE name = " + name + " AND upc = " + upc;
+		try
+		{
+			Statement stmt = dbConn.createStatement();
+			ResultSet dbResult = stmt.executeQuery(sql);
+			dbConn.commit();
+			dbResult.next();
+			return dbResult.getInt("totalStock");	
+		}
+		catch(SQLException ex)
+		{
+			dbConn.rollback();
+			throw ex;
+		}
+	}
+	
+	
+	// Creates an item in the Item table - Jomat
+	public static boolean createItem(	BigDecimal upc, String title, String typeI, String category, 
+										String company, int year, int sellPrice) throws SQLException
+	{
+		if (year > 2100 || year < 1850)
+			return false;
+		
+		if (sellPrice < 0)
+			return false;
+		
+		if (typeI.equalsIgnoreCase("CD"))
+		{ 
+			typeI = "CD";
+		}
+		else
+		{
+			if (typeI.equalsIgnoreCase("DVD"))
+			{
+				typeI = "DVD";
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		if ( ! (category.equalsIgnoreCase("Pop") || category.equalsIgnoreCase("Rock") || 
+				category.equalsIgnoreCase("Rap") || category.equalsIgnoreCase("Country") || 
+				category.equalsIgnoreCase("Classical") || category.equalsIgnoreCase("New Age") || 
+				category.equalsIgnoreCase("Instrumental")) )
+			return false;
+				
+		String sql = "INSERT INTO Item VALUES(?, ?, ?, ?, ?, ?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setBigDecimal(1, upc);
+			ps.setString(2, title);
+			ps.setString(3, typeI);
+			ps.setString(4, category);
+			ps.setString(5, company);
+			ps.setInt(6, year);
+			ps.setInt(7, sellPrice);
+			ps.executeUpdate();
+			dbConn.commit();
+			ps.close();
+			return true;
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
+	
+	
+	// Inserts an Lead Singer for Item (ie. UPC) - Jomat
+	public static void insertLeadSinger(BigDecimal upc, String name) throws SQLException
+	{
+		String sql = "INSERT INTO LeadSinger VALUES(?, ?)" ;
+		try
+		{			
+			PreparedStatement ps = dbConn.prepareStatement(sql);
+			ps.setBigDecimal(1, upc);
+			ps.setString(2, name);
+			ps.executeUpdate();
+			dbConn.commit();
+			ps.close();
+		}
+		catch(SQLException ex)
+		{
+			try
+			{
+				dbConn.rollback();
+				throw ex;
+			}
+			catch(SQLException e)
+			{
+				throw e;
+			}
+		}
+	}
+	
+	
 // # # #   MAIN   # # #  ///
 	
 	public static void main(String[] args)
