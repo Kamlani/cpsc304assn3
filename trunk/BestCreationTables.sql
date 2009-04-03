@@ -30,7 +30,7 @@ company VARCHAR(30),
 yearI INT NOT NULL, 
 sellPrice DECIMAL(10,2) NOT NULL,
 CONSTRAINT Cons_CDDVD_TypeI CHECK (typeI IN ('CD', 'DVD')),
-CONSTRAINT Cons_Category CHECK (category IN ('Pop', 'Rock', 'Rap', 'Country', 'Classical', ' New Age', 'Instrumental')),
+CONSTRAINT Cons_Category CHECK (category IN ('Pop', 'Rock', 'Rap', 'Country', 'Classical', 'New Age', 'Instrumental')),
 CONSTRAINT Cons_Year CHECK (yearI BETWEEN 1850 AND 2100),
 CONSTRAINT Cons_SellPrice CHECK ( sellPrice > 0 ) );
 
