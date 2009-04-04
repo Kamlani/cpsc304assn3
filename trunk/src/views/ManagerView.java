@@ -18,6 +18,7 @@ import javax.swing.*;
 
 public class ManagerView extends View {
 
+		private JPanel wrapperContainer;
 		private JPanel container;
 		private JScrollPane subPanel1;
 		private JScrollPane subPanel2;
@@ -36,18 +37,28 @@ public class ManagerView extends View {
         }
        
         private void init() {
+
+        	Button refresh = new Button("Refresh Reports");
+        	refresh.setPreferredSize(new Dimension(128,64));
+        	refresh.addActionListener(new refreshAction());
         	
         	container = new JPanel(new GridLayout(2,1));
-        	container.setPreferredSize(new Dimension(Short.MAX_VALUE, 512));
-        	this.getContainer().add(container, BorderLayout.CENTER);
+        	container.setPreferredSize(new Dimension(Short.MAX_VALUE, 480));
+        	
+        	wrapperContainer = new JPanel(new BorderLayout());
+        	wrapperContainer.add(container,BorderLayout.CENTER);
+        	wrapperContainer.add(refresh,BorderLayout.SOUTH);
+        	
+        	this.getContainer().add(wrapperContainer, BorderLayout.CENTER);
         	
         	updateResults();
         
-        	container.add(subPanel2);
         	container.add(subPanel1);
-       
-			container.validate();
+        	container.add(subPanel2);
+        	
+        	wrapperContainer.validate();
         } //INIT
+        
         
         private void updateResults() {
         	
@@ -75,15 +86,25 @@ public class ManagerView extends View {
 			ResultSet topSales = new ResultSet(header2,titles,results,cellWidth);
 		
 			resultContainer1 = dailySales.getContainer();
-			resultContainer1.setPreferredSize(new Dimension(512, 512));
+			resultContainer1.setPreferredSize(new Dimension(512, 64 + rows * 20)); //DONT F*** THIS UP
 			resultContainer2 = topSales.getContainer();
-			resultContainer2.setPreferredSize(new Dimension(512, 512));
+			resultContainer2.setPreferredSize(new Dimension(512, 64 + rows * 20)); //DONT F*** THIS UP
 			
 			subPanel1 = new JScrollPane(resultContainer1);
 			subPanel2 = new JScrollPane(resultContainer2);
 			
-			
+			wrapperContainer.validate();
         }
+        
+        
+        //LISTENER
+        
+        public class refreshAction implements ActionListener { 
+    		public void actionPerformed(ActionEvent e) {
+    			updateResults();
+    			MainView.errorDialog("Reports Updated");
+    		}
+    	}// END LISTENER
     
   
 }
