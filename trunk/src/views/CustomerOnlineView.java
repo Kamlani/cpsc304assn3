@@ -28,7 +28,10 @@ public class CustomerOnlineView extends View {
 
 	private Button resultCheck;
 	private Panel searchRowPanel;
-	private JFormattedTextField searchSubPanelTitle;
+	private JFormattedTextField searchCategory;
+	private JFormattedTextField searchTitle;
+	private JFormattedTextField searchSinger;
+	private JFormattedTextField searchQuantity;
 	private Panel searchPanel;
 
 	
@@ -83,10 +86,10 @@ public class CustomerOnlineView extends View {
 		categoryLabel.setFont(font1);
 		subPanel1.add(categoryLabel);
 		
-		searchSubPanelTitle = new JFormattedTextField();
-		searchSubPanelTitle.setFont(font1);
-		searchSubPanelTitle.setEditable(true);
-		subPanel1.add(searchSubPanelTitle);
+		searchCategory = new JFormattedTextField();
+		searchCategory.setFont(font1);
+		searchCategory.setEditable(true);
+		subPanel1.add(searchCategory);
 		
 		searchRowPanel.add(subPanel1);
 		
@@ -99,10 +102,10 @@ public class CustomerOnlineView extends View {
 		titleLabel.setFont(font1);
 		subPanel2.add(titleLabel);
 		
-		searchSubPanelTitle = new JFormattedTextField();
-		searchSubPanelTitle.setFont(font1);
-		searchSubPanelTitle.setEditable(true);
-		subPanel2.add(searchSubPanelTitle);
+		searchTitle = new JFormattedTextField();
+		searchTitle.setFont(font1);
+		searchTitle.setEditable(true);
+		subPanel2.add(searchTitle);
 		
 		searchRowPanel.add(subPanel2);
 		
@@ -115,10 +118,10 @@ public class CustomerOnlineView extends View {
 		singerLabel.setFont(font1);
 		subPanel3.add(singerLabel);
 		
-		searchSubPanelTitle = new JFormattedTextField();
-		searchSubPanelTitle.setFont(font1);
-		searchSubPanelTitle.setEditable(true);
-		subPanel3.add(searchSubPanelTitle);
+		searchSinger = new JFormattedTextField();
+		searchSinger.setFont(font1);
+		searchSinger.setEditable(true);
+		subPanel3.add(searchSinger);
 		
 		searchRowPanel.add(subPanel3);
 		
@@ -131,10 +134,10 @@ public class CustomerOnlineView extends View {
 		quantityLabel.setFont(font1);
 		subPanel4.add(quantityLabel);
 		
-		searchSubPanelTitle = new JFormattedTextField();
-		searchSubPanelTitle.setFont(font1);
-		searchSubPanelTitle.setEditable(true);
-		subPanel4.add(searchSubPanelTitle);
+		searchQuantity = new JFormattedTextField();
+		searchQuantity.setFont(font1);
+		searchQuantity.setEditable(true);
+		subPanel4.add(searchQuantity);
 		
 		searchRowPanel.add(subPanel4);
 		
@@ -265,27 +268,18 @@ public class CustomerOnlineView extends View {
 		public void actionPerformed(ActionEvent e) {
 			
 			results.removeAllElements();
-			
-			//POPULATES RESULTS OF SEARCH FROM CONTROLLER HERE IS AN EXAMPLE
-			Vector<Object> exampleResult = new Vector<Object>();
-			exampleResult.add(123456789);
-			exampleResult.add("Blah");
-			exampleResult.add(2);
-			
-			Vector<Object> exampleResult2 = new Vector<Object>();
-			exampleResult2.add(123456789);
-			exampleResult2.add("Poop");
-			exampleResult2.add(7);
-			
-			Vector<Object> exampleResult3 = new Vector<Object>();
-			exampleResult3.add(123456789);
-			exampleResult3.add("More Poop");
-			exampleResult3.add(6);
-			
-			results.add(exampleResult);
-			results.add(exampleResult2);
-			results.add(exampleResult3);
-
+			if (!searchQuantity.getText().isEmpty()) 
+			{
+				results = thisController.searchItem(searchCategory.getText(),
+						searchTitle.getText(),
+						searchCategory.getText(),
+						Integer.parseInt(searchQuantity.getText()));
+			} else { 
+				results = thisController.searchItem(searchCategory.getText(),
+						searchTitle.getText(),
+						searchCategory.getText(),
+						1);
+			}
 			
 			update();
 		}
@@ -303,13 +297,20 @@ public class CustomerOnlineView extends View {
 	
 	private void addToCart(int item) {
 		
-		//CONTROLLER LOGIC FOR DECREMENTING RESULT ITEM'S QUANTITY GOES HERE, CHECK WITH DB TO MAKE SURE QUANTITY EXISTS
-		//((Vector)results.get(item)).set(2, UPDATEDQUANTITY);
+		if (  (Integer)  ((Vector)results.get(item)).get(2) > 0   ) {
+			((Vector)results.get(item)).set   ( 2, (Integer) ((Vector)results.get(item)).get(2) - 1  ); 
+			
+			update();
+			
+			Vector<Object> itemAdd = new Vector<Object>();
+			itemAdd.add(((Vector)results.get(item)).get(0));
+			itemAdd.add(((Vector)results.get(item)).get(1));
+			itemAdd.add(((Vector)results.get(item)).get(2));
+			this.getParent().addItem( itemAdd );
+			
+			((CustomerCheckoutView) this.getParent().getView(3)).update();
+		}
 		
-		//ADDS THE SELECTED ITEM IF DB SAYS IT HAS ENOUGH
-		Vector<Object> itemAdd = ((Vector)results.get(item));
-		this.getParent().addItem( itemAdd );
-		((CustomerCheckoutView) this.getParent().getView(3)).update();
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -108,9 +109,8 @@ public class InStoreView extends View {
 	public void cash() {
 		
 //		int thisUPC = Integer.parseInt(upc.getText());
-//		
 //		int thisQuantity = Integer.parseInt(quantity.getText());
-//		
+//	
 //		int receiptID = thisController.inStorePurchase(true, "666", "default", null, null, null, thisUPC, thisQuantity);
 //		
 //		if ( receiptID != -1 )

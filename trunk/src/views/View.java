@@ -20,14 +20,21 @@ public class View {
 	
 	public Font font1;
 	
-	public View () {}
+	public View () {
+		
+		try {
+			thisController = Operations.getInstance();
+		} catch (Exception e) {
+			MainView.errorDialog(e.toString());
+		}
+		
+	}
 	
 	public void reInit (String title, MainView parent) {
-		
 		//default setup methods defined in View.java
 		setParent(parent);
 		setContainer();
-		setTitle(title);
+		setTitle(title);		
 	}
 	
 	public void setContainer() {
