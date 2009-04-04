@@ -23,6 +23,7 @@ public class ReceiptView extends View {
 
 		private JPanel wrapperContainer;
 		private JPanel subPanel1;
+		private JPanel subPanel3;
 		private JScrollPane subPanel2;
 		private JPanel resultContainer;
 		
@@ -30,8 +31,8 @@ public class ReceiptView extends View {
 		private Panel searchRowPanel;
 		private JFormattedTextField searchSubPanelTitle;
 		
-		private Vector<Object> results;
-		
+		private JFormattedTextField totalPrice;
+		private JFormattedTextField shipDays;
 		
         public ReceiptView (String title, MainView parent) {
                
@@ -51,10 +52,13 @@ public class ReceiptView extends View {
         	
         	createSearchPanel();
         	
+        	createTotals();
+        	
         	updateResults();
         
         	wrapperContainer.add(subPanel1,BorderLayout.NORTH);
         	wrapperContainer.add(subPanel2,BorderLayout.CENTER);
+        	wrapperContainer.add(subPanel3,BorderLayout.SOUTH);
         	
         	wrapperContainer.validate();
         } //INIT
@@ -64,8 +68,6 @@ public class ReceiptView extends View {
     		subPanel1 = new JPanel();
     		subPanel1.setBackground(bg3);
     		subPanel1.setLayout(new GridLayout(2,1));
-    		subPanel1.setPreferredSize(new Dimension(Short.MAX_VALUE,128));
-    		this.getContainer().add(subPanel1, BorderLayout.NORTH);
     		
     		searchRowPanel = new Panel(new GridLayout(1,2));
     		subPanel1.add(searchRowPanel);
@@ -133,9 +135,48 @@ public class ReceiptView extends View {
 			
 			subPanel2 = new JScrollPane(resultContainer);
 			
+			
+/////////////////////////////////////////////////////////////////////////////
+			//SPECIAL COMMENT FOR YOU GUYS
+////////////////////////////////////////////////////////////////////////////
+			
+			totalPrice.setText("" + 5);
+			shipDays.setText("" + 5);
+			
+/////////////////////////////////////////////////////////////////////////////
+			//SPECIAL COMMENT FOR YOU GUYS
+////////////////////////////////////////////////////////////////////////////
+			
 			wrapperContainer.validate();
         }
         
+        
+        private void createTotals () {
+    		
+    		subPanel3 = new JPanel();
+    		subPanel3.setBackground(bg3);
+    		subPanel3.setLayout(new GridLayout(2,2));
+    		
+    		Label label1 = new Label("Total Price");
+    		label1.setFont(font2);
+    		subPanel3.add(label1);
+
+    		Label label2 = new Label("Shipment Days");
+    		label2.setFont(font2);
+    		subPanel3.add(label2);
+    		
+    		totalPrice = new JFormattedTextField();
+    		totalPrice.setFont(font1);
+    		totalPrice.setEditable(false);
+    		subPanel3.add(totalPrice);
+    		
+    		
+    		shipDays = new JFormattedTextField();
+    		shipDays.setFont(font1);
+    		shipDays.setEditable(false);
+    		subPanel3.add(shipDays);
+    		
+    	}//SEARCH PANEL
         
         //LISTENER
         
