@@ -19,6 +19,7 @@ public class View {
 	public Color bg3;
 	
 	public Font font1;
+	public Font font2;
 	
 	public View () {
 		
@@ -44,6 +45,7 @@ public class View {
         bg3 = new Color(223,223,223);
         
         font1 = new Font("Arial", Font.BOLD, 14);
+        font2 = new Font("Arial", Font.BOLD, 24);
 		
 		mainContainer = new Panel();
 		mainContainer.setLayout(new BorderLayout());
