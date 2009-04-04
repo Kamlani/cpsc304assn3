@@ -2,6 +2,7 @@ package views;
 
 import java.awt.*;
 import javax.swing.*;
+
 import java.awt.event.*;
 import java.util.Vector;
 
@@ -10,9 +11,6 @@ import logic.Operations;
 public final class MainView {
 	
 	private static MainView thisMainView;
-	
-	private static Operations thisController; //CONTROLLER REFERENCE
-
 	
 	//VIEW AND BUTTON INFORMATION DON'T EDIT
 	private static JFrame mainFrame;
@@ -25,7 +23,7 @@ public final class MainView {
 	private static String[] buttonText;
 	private static Button[] buttons;
 	
-	private static int cid; //CUSTOMER ID
+	private static String cid; //CUSTOMER ID
 	private static int totalCartItems; //MAX CART ITEMS
 	private static Vector<Object> cart; //USE ARRAYS IN THE VECTOR WITH YOUR INFO FOR EACH ITEM THAT NEEDS TO BE DISPLAYED
 	
@@ -33,7 +31,7 @@ public final class MainView {
 		
 		//CART AND USER STUFF
 		
-		cid = 0;
+		cid = null;
 		totalCartItems = 16;
 		cart = new Vector<Object>();// INIT TO SIZE 0
 		
@@ -44,7 +42,7 @@ public final class MainView {
 		setFrame("CPSC 304 Assn3 Main View", 960, 600);		
 		addTitle("CPSC 304 Assn3 Main View");
 		
-		numViews = 9;
+		numViews = 10;
 		viewTitles = new String[numViews];
 		views = new View[numViews];
 		buttons = new Button[numViews];
@@ -89,6 +87,10 @@ public final class MainView {
 		mainFrame.add(currentView.getView());
 		mainFrame.validate();
 		
+	}
+	
+	public static void errorDialog (String message) {
+		JOptionPane.showMessageDialog(mainFrame, message);		
 	}
 	
 	private static void setFrame (String text, int width, int height) {
@@ -141,7 +143,7 @@ public final class MainView {
 	
 	public void switchView (int view) {
 		if (view == 0) {
-			cid = 0;
+			cid = null;
 			cart.removeAllElements();
 		}//reset all data
 		if (currentView != views[view]) {
@@ -156,10 +158,6 @@ public final class MainView {
 	
 	
 	//PUBLIC METHODS FOR GETTING THE CONTROLLER, ADDING ITEMS TO CART, GETTING VIEWS
-	
-	public Operations getController() {
-		return thisController;		
-	}
 	
 	public View getView(int view) {
 		return views[view];		
@@ -195,11 +193,11 @@ public final class MainView {
 		cart.removeAllElements();
 	}
 	
-	public int getCID () {
+	public String getCID () {
 		return cid;
 	}
 	
-	public void setCID (int newID) {
+	public void setCID (String newID) {
 		cid = newID;
 	}
 	

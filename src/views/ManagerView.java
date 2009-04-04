@@ -75,7 +75,9 @@ public class ManagerView extends View {
 			ResultSet topSales = new ResultSet(header2,titles,results,cellWidth);
 		
 			resultContainer1 = dailySales.getContainer();
+			resultContainer1.setPreferredSize(new Dimension(512, 512));
 			resultContainer2 = topSales.getContainer();
+			resultContainer2.setPreferredSize(new Dimension(512, 512));
 			
 			subPanel1 = new JScrollPane(resultContainer1);
 			subPanel2 = new JScrollPane(resultContainer2);

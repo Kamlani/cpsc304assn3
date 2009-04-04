@@ -37,6 +37,7 @@ public class RegisterView extends View {
 	}
 	
 	private void init() {
+		
 		createLoginPanels();
 	}
 	
@@ -166,19 +167,14 @@ public class RegisterView extends View {
 	
 	public void register() {
 		
-		//CONTROLLER LOGIC FOR REGISTERING
-//		name.getText();
-//		address.getText();
-//		phone.getText();
-//		id.getText();
-//		pass.getText();
-		//if successful
-		//get cid RETURNED FROM CONTROLLER
+		try {
+			thisController.Register(id.getText(), pass.getText(), name.getText(), address.getText(), phone.getText());
+			this.getParent().setCID(id.getText());
+			this.getParent().switchView(2);
+		} catch (Exception e) {
+			MainView.errorDialog("Username Already Taken!");
+		}
 		
-		int cid = 83837278; //EXAMPLE CID
-		
-		this.getParent().setCID(cid);
-		this.getParent().switchView(2);
 	}
 	
 	//LISTENERS
