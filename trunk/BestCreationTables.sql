@@ -91,7 +91,7 @@ quantity INTEGER NOT NULL,
 PRIMARY KEY (sid, upc),
 FOREIGN KEY (sid) REFERENCES Shipment,
 FOREIGN KEY (upc) REFERENCES Item,
-CONSTRAINT Cons_Quantity_Ship CHECK ( quantity > 0 ) );
+CONSTRAINT Cons_Quantity_Ship CHECK ( quantity >= 0 ) );
 
 -- Relationship Table
 CREATE TABLE Stored(
@@ -101,7 +101,7 @@ stock INTEGER NOT NULL,
 PRIMARY KEY (name, upc),
 FOREIGN KEY (name) REFERENCES Store,
 FOREIGN KEY (upc) REFERENCES Item,
-CONSTRAINT Cons_Stock CHECK ( stock > 0 ) );
+CONSTRAINT Cons_Stock CHECK ( stock >= 0 ) );
 
 -- Entity Table
 CREATE TABLE Purchase(
@@ -123,7 +123,7 @@ upc DECIMAL(12,0),
 quantity INTEGER NOT NULL,
 FOREIGN KEY (receiptID) REFERENCES Purchase,
 FOREIGN KEY (upc) REFERENCES Item,
-CONSTRAINT Cons_Quantity_Purchase CHECK ( quantity > 0 ) );
+CONSTRAINT Cons_Quantity_Purchase CHECK ( quantity >= 0 ) );
 
 -- Entity Table
 CREATE TABLE ReturnP(
@@ -141,7 +141,7 @@ upc DECIMAL(12,0),
 quantity INTEGER NOT NULL,
 FOREIGN KEY (retId) REFERENCES ReturnP,
 FOREIGN KEY (upc) REFERENCES Item,
-CONSTRAINT Cons_Quantity_Return CHECK ( quantity > 0 ) );
+CONSTRAINT Cons_Quantity_Return CHECK ( quantity >= 0 ) );
 
 
 ---- ***** SEQUENCES ***** ----
