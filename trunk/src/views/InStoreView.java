@@ -18,10 +18,13 @@ import javax.swing.*;
 
 public class InStoreView extends View {
 	
-	private Panel cardInfoPanel;
-	private JFormattedTextField upc;
-	private JFormattedTextField quantity;
+	private Panel purchaseRowPanel[];
+	private JFormattedTextField[] upc;
+	private JFormattedTextField[] quantity;
+	private Button[] showPurchase;
+	private Button[] makePurchase;
 	
+	private int maxPurchases;
 	private Panel container;
 
 	public InStoreView (String title, MainView parent) {
@@ -36,6 +39,16 @@ public class InStoreView extends View {
 	}
 	
 	private void init() {
+		
+		maxPurchases = 10;
+		
+		purchaseRowPanel = new Panel[maxPurchases];
+		upc = new JFormattedTextField[maxPurchases];
+		quantity = new JFormattedTextField[maxPurchases];
+		showPurchase = new Button[maxPurchases];
+		makePurchase = new Button[maxPurchases];
+		
+		
 		createLoginPanels();
 	}
 	
@@ -45,68 +58,93 @@ public class InStoreView extends View {
 		
 		container = new Panel();
 		container.setBackground(bg3);
-		container.setLayout(new GridLayout(4,1));
-		container.setPreferredSize(new Dimension(Short.MAX_VALUE,256));
+		container.setLayout(new GridLayout(13,1));
+		container.setPreferredSize(new Dimension(Short.MAX_VALUE,480));
 		this.getContainer().add(container, BorderLayout.NORTH);
 		
-		//label for Container
-		Label thisTitle = new Label("In Store Purchase:");
-		thisTitle.setFont(font1);
-		container.add(thisTitle);
+		//label for Panels
 		
+		Panel Labels = new Panel(new GridLayout(1,4));
 		
-		cardInfoPanel = new Panel(new GridLayout(1,2));
-		container.add(cardInfoPanel);		
-		
-//SUB PANEL 1
-		
-		Panel subPanel1 = new Panel();
-		subPanel1.setLayout(new GridLayout(2,1));
-				
 		Label upcLabel = new Label("Upc:");
 		upcLabel.setFont(font1);
-		subPanel1.add(upcLabel);
+		Labels.add(upcLabel);
 		
-		upc = new JFormattedTextField();
-		upc.setFont(font1);
-		upc.setEditable(true);
-		subPanel1.add(upc);
-		
-		cardInfoPanel.add(subPanel1);
-		
-//SUB PANEL 2
-		
-		Panel subPanel2 = new Panel();
-		subPanel2.setLayout(new GridLayout(2,1));
-				
 		Label quantityLabel = new Label("Quantity:");
 		quantityLabel.setFont(font1);
-		subPanel2.add(quantityLabel);
+		Labels.add(quantityLabel);
 		
-		quantity = new JFormattedTextField();
-		quantity.setFont(font1);
-		quantity.setEditable(true);
-		subPanel2.add(quantity);
+		Label makePurchaseLabel = new Label("Make Purchase:");
+		makePurchaseLabel.setFont(font1);
+		Labels.add(makePurchaseLabel);
 		
-		cardInfoPanel.add(subPanel2);
+		Label showPurchaseLabel = new Label("Add Another Purchase:");
+		showPurchaseLabel.setFont(font1);
+		Labels.add(showPurchaseLabel);
 		
-//END SUB PANELS
+		container.add(Labels);
 		
-		Button cashButton = new Button("Cash Purchase");
-		cashButton.addActionListener(new cashAction());
-		container.add(cashButton);
+		for (int i = 0; i < maxPurchases; i++) {
+				
+			purchaseRowPanel[i] = new Panel(new GridLayout(1,4));
+			
+	//SUB PANEL 1
+			upc[i] = new JFormattedTextField();
+			upc[i].setFont(font1);
+			upc[i].setEditable(true);
+			upc[i].setVisible(false);
+			
+			purchaseRowPanel[i].add(upc[i]);
+			
+	//SUB PANEL 2
+			quantity[i] = new JFormattedTextField();
+			quantity[i].setFont(font1);
+			quantity[i].setEditable(true);
+			quantity[i].setVisible(false);
+			
+			purchaseRowPanel[i].add(quantity[i]);
+			
+	//SUB PANEL 3
+			makePurchase[i] = new Button("Add To Cart");
+			makePurchase[i].addActionListener(new addToCartAction());
+			makePurchase[i].setVisible(false);
+			
+			purchaseRowPanel[i].add(makePurchase[i]);
+			
+	//SUB PANEL 4
+			showPurchase[i] = new Button("Add Purchase");
+			showPurchase[i].addActionListener(new showPurchaseAction());
+			
+			purchaseRowPanel[i].add(showPurchase[i]);
+			
+	//END SUB PANELS
+			
+			container.add(purchaseRowPanel[i]);
+			
+		}
 		
-		Button creditButton = new Button("Credit Purchase");
-		creditButton.addActionListener(new creditAction());
-		container.add(creditButton);
+		Button cashPurchase = new Button("Cash Purchase");
+		cashPurchase.addActionListener(new cashAction());
+		container.add(cashPurchase);
 		
+		Button creditPurchase = new Button("Credit Purchase");
+		creditPurchase.addActionListener(new creditAction());
+		container.add(creditPurchase);
 		
 		container.validate();
 		
-	}//Login PANELs
+	}//CREATE PANELs	
 	
+	
+	//HELPER METHODS FOR LISTENERS
 	
 	public void cash() {
+		
+		//CONTROLLER LOGIC PURCHASE THE WHOLE CART!!!
+		this.getParent().getCart();
+		
+		
+		//STUFF FROM FRIDAY
 		
 //		int thisUPC = Integer.parseInt(upc.getText());
 //		int thisQuantity = Integer.parseInt(quantity.getText());
@@ -123,48 +161,84 @@ public class InStoreView extends View {
 	
 	
 	public void credit() {
-		
-		//CONTROLLER LOGIC SEARCH FOR ITEM HERE
-		
-//		upc.getText();
-//		quantity.getText();
-		
-		//if successful
-		//CONTROLLER LOGIC SET UP ADD TO CART ITEM SEE EXAMPLE BELOW
-		//SET THIS
-		
-		Vector<Object> item = new Vector<Object>();
-		item.add(123456789); //upc.getText();
-		item.add("This is an example Item"); //item name
-		item.add(5); //quantity.getText();
-		
-		this.getParent().getCart().add(item);
-		//SWITCH TO VIEW 4 CREDIT CARD VIEW, IN STORE DOESN'T SEE CART, BUT WE USE IT TO PROCESS THE INVENTORY FOR THE CONTROLLER
 		this.getParent().switchView(4);		
 	}
 	
-	//LISTENERS
+	private void addToCart(int item) {
+		
+		//CONTROLLER LOGIC SEARCH FOR ITEM BASED ON UPC AND QUANTITY
+		//IF UPC AND QUANTITY ARE THERE i.e. RETURNS A TUPLE, GET UPC, NAME AND QUANTITY, ADD TO CART
+		//NOTE BECAUSE USER SPECIFIES QUANTITY, IT USES OVERLOADED ADD TO CART METHOD IN MAIN VIEW
+		
+		boolean itemFound = true;
+		if (  itemFound   ) {
+			
+			//EXAMPLE ITEM
+			Vector<Object> itemToAdd = new Vector<Object>();
+			itemToAdd.add(456728);
+			itemToAdd.add("SHOES");
+			itemToAdd.add(5);
+			
+			
+			//HOW TO ADD ONCE CONTROLLER RETURNS ITEM IN VECTOR FORM
+			this.getParent().addItem(    itemToAdd   ,    (Integer.parseInt(itemToAdd.get(2).toString()))    );
+			
+			
+			//SET THE VISIBILITY OF THAT ITEM TO FALSE
+			purchaseVis(item, false);
+			
+			
+			//UPDATES THE CART VIEW
+			((CustomerCheckoutView) this.getParent().getView(3)).update();
+			
+			
+		} else {
+			MainView.errorDialog("Item Does Not Exist In That Quantity");
+		}
+		
+	}
 	
+	private void purchaseVis(int item, boolean vis) {
+		upc[item].setVisible(vis);
+		quantity[item].setVisible(vis);
+		makePurchase[item].setVisible(vis);
+		if (!vis) {
+			showPurchase[item].setVisible(vis);
+		}
+	}
+	
+	
+	//LISTENERS
 	
 	public class cashAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
-			
-			//CONTROLLER LOGIC SEARCH FOR ITEM HERE
-			
-//			upc.getText();
-//			quantity.getText();
-			
-			//if successful
-			
-			//CONTROLLER LOGIC FOR IN STORE  CASH   PURCHASE
-			//CASH
-			
+			cash();
 		}
 	}// END LISTENER
 	
 	public class creditAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			credit();			
+		}
+	}// END LISTENER
+	
+	public class addToCartAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			for (int i = 0; i < maxPurchases; i++) {
+				if ( e.getSource() == makePurchase[i]) {
+					addToCart(i);
+				}	
+			} //MATCH VIEW OF BUTTON PRESSED THEN SWITCH
+        }
+	}
+	
+	public class showPurchaseAction implements ActionListener { 
+		public void actionPerformed(ActionEvent e) {
+			for (int i = 0; i < maxPurchases; i++) {
+				if ( e.getSource() == showPurchase[i]) {
+					purchaseVis(i, true);
+				}	
+			} //MATCH VIEW OF BUTTON PRESSED THEN SWITCH			
 		}
 	}// END LISTENER
 	
