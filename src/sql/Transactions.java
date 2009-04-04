@@ -906,6 +906,23 @@ public class Transactions {
             throw ex;
         }
     }
+    
+    public static ResultSet getPurchaseItems(BigDecimal receiptId) throws SQLException
+    {
+        String sql = "SELECT DISTINCT PI.upc, PI.quantity, I.sellprice FROM purchase P, purchaseitem PI, Item I WHERE PI.upc = I.upc  AND  PI.receiptid= '" + receiptId + "'";
+        try
+        {
+            Statement stmt = dbConn.createStatement();
+            ResultSet dbResult = stmt.executeQuery(sql);
+            System.out.println(sql);
+            dbConn.commit();
+            return dbResult;
+        }
+        catch(SQLException ex)
+        {
+            throw ex;
+        }
+    }
        
 // # # #   MAIN   # # #  ///
    
