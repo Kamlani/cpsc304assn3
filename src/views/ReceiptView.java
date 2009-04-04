@@ -170,7 +170,6 @@ public class ReceiptView extends View {
     		totalPrice.setEditable(false);
     		subPanel3.add(totalPrice);
     		
-    		
     		shipDays = new JFormattedTextField();
     		shipDays.setFont(font1);
     		shipDays.setEditable(false);
