@@ -174,7 +174,7 @@ public class LoginView extends View {
 		this.getParent().switchView(1);
 	}
 	public void shipment() {
-		this.getParent().switchView(1);
+		this.getParent().switchView(9);
 	}
 	public void register() {
 		this.getParent().switchView(5);
