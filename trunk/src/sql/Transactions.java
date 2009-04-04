@@ -451,7 +451,7 @@ public class Transactions {
 	
 	//****//
 	
-	// function to create a shipment (ie insert into Shipment) - Jomat
+	// function to create a shipment (ie insert into Shipment) - Jomat Ok
 	public static int insertShipment(String supName, String storeName, Date shipDate) throws SQLException
 	{
 		String sql = "INSERT INTO Shipment VALUES( shipment_counter.nextval, ?, ?, ?)" ;
@@ -474,7 +474,7 @@ public class Transactions {
 	}
 
 	
-	// to get the latest sid - Jomat
+	// to get the latest sid - Jomat Ok
 	private static int getCurrentShipmentID() throws SQLException
 	{
 		String sql = "SELECT shipment_counter.currval as currentVal FROM Shipment";
@@ -494,7 +494,7 @@ public class Transactions {
 	}
 	
 	
-	// function to create a Store - Jomat
+	// function to create a Store - Jomat Ok
 	public static String insertStore(String name, String address, String type) throws SQLException
 	{
 		if (type.equalsIgnoreCase("ONL"))
@@ -532,7 +532,7 @@ public class Transactions {
 	}
 	
 	
-	// function to create a Supplier - Jomat
+	// function to create a Supplier - Jomat Ok
 	public static String insertSupplier(String name, String address, String city, String status) throws SQLException
 	{
 		if (status.equalsIgnoreCase("Y"))
@@ -571,7 +571,7 @@ public class Transactions {
 	}
 	
 	
-	// Adds an item to the ShipItem Table (ie. Items included in a Shipment) - Jomat
+	// Adds an item to the ShipItem Table (ie. Items included in a Shipment) - Jomat Ok
 	// ??? Recall that the price of the shipment should affect directly the price of the Item (20% more)
 	public static void addItemToShipment(int sid, BigDecimal upc, BigDecimal supPrice, int quantity) throws SQLException
 	{
@@ -603,7 +603,7 @@ public class Transactions {
 	}
 	
 	
-	// Adds an item to a Store inserting the information to Stored Table (ie. Keeps the inventory) - Jomat
+	// Adds an item to a Store inserting the information to Stored Table (ie. Keeps the inventory) - Jomat Ok
 	// To add or subtract quantity from an item in a store, use modifyQuantityItemStore
 	public static void insertItemToStore(String name, BigDecimal upc, int stock) throws SQLException
 	{
@@ -640,19 +640,16 @@ public class Transactions {
 	public static boolean modifyQuantityItemStore(String name, BigDecimal upc, int incrementDecrement) throws SQLException
 	{
 
-		String sql = "INSERT INTO Stored VALUES(?, ?, ?)" ;
 		try
 		{			
 			int tempQuantity = getQuantityItemStore(name, upc) + incrementDecrement;
 			if (tempQuantity >= 0)
 			{
-				PreparedStatement ps = dbConn.prepareStatement(sql);
-				ps.setString(1, name);
-				ps.setBigDecimal(2, upc);
-				ps.setInt(3, tempQuantity);
-				ps.executeUpdate();
+				String sql = "UPDATE Stored SET stock = " + tempQuantity + " WHERE name = " + name + " AND upc = " + upc;
+				Statement stmt = dbConn.prepareStatement(sql);
+				stmt.executeUpdate(sql);
 				dbConn.commit();
-				ps.close();
+				stmt.close();
 				return true;
 			}
 			else
@@ -684,7 +681,6 @@ public class Transactions {
 			Statement stmt = dbConn.createStatement();
 			ResultSet dbResult = stmt.executeQuery(sql);
 			dbConn.commit();
-			dbResult.next();
 			return dbResult.getInt("totalStock");	
 		}
 		catch(SQLException ex)
@@ -880,12 +876,49 @@ public class Transactions {
 	{
 		try
 		{
-			Transactions.connect("ora_a3o6", "a72803067");
+			Transactions.connect("ora_b9e6", "a67101063");
+			
+			Date currentDate = new Date(System.currentTimeMillis());
+			Calendar cal = Calendar.getInstance();
+			cal.set(2009, 01, 01);
+			Date futureDate = new Date(cal.getTime().getTime());
+			
+			// Jomat
+			// String a = insertStore("Store X", "12 Address", "ONL");
+			// String b = insertStore("Store Y", "34 Address", "STO");
+			
+			// String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
+			// String d = insertSupplier("Sup 2", "57 Ave", "Langley", "N");
+
+			// int e = insertShipment("Sup 1", "Store X", futureDate);
+			
+			// BigDecimal bdec = new BigDecimal (123459);
+			// BigDecimal bdec2 = new BigDecimal (123456);
+			// BigDecimal pric = new BigDecimal (11.99);
+			// addItemToShipment(8,  bdec, pric, 7);
+			// addItemToShipment(8, bdec2 , pric, 3);
+			
+			// insertItemToStore("Store X", new BigDecimal (123459), 8);
+			// insertItemToStore("Store Y", new BigDecimal (123455), 2);
+			
+			//System.out.println(getQuantityItemStore );
+			
+			//boolean ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), 4);
+			
+			System.out.println( getQuantityItemStore("Store X", new BigDecimal (123459)) );
+			
+			//ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), -5);
+			
+			System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
+			
+			Transactions.closeConnection();
+			System.out.println("Done");
+			
+			/*
 			String cid = "ophir";
 			String name = "ophir";
-			Date currentDate = new Date(System.currentTimeMillis());
-			
-			/*int rid = insertCashPurchase(currentDate, cid, name);
+			Date currentDate = new Date(System.currentTimeMillis()); 
+			int rid = insertCashPurchase(currentDate, cid, name);
 			System.out.println(rid);
 			Calendar cal = Calendar.getInstance();
 			cal.set(2011, 10, 1);
@@ -910,7 +943,6 @@ public class Transactions {
 			// BigDecimal b = new BigDecimal(1235);
 			// addItemToReturn(8, b, 2);
 			// createUsername("george", "hello", "George", "Here at UBC", 123 );
-			Transactions.closeConnection();
 		}
 		catch(Exception ex)
 		{
