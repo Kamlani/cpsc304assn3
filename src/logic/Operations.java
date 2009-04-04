@@ -134,37 +134,34 @@ public class Operations
 		
 		return -1;		
 	}
-		
-	/*
-	public String[][] searchItem(String category, String title, String singer, int quanity)
+	
+	
+	
+	public Vector<Object> searchItem(String category, String title, String singer, int quanity)
 	{
 		// Call Ophir code to get Result set searchResults
 		
 		//ResultSet x
+
+	
+		Vector<Object> searchReturn = new Vector<Object>();
 		
-		int numRows = 0;
 		
-		while(x.next())
-			numRows++;
-		
-		while(x.previous());
-		
-		String[][] searchReturn = new String[numRows][3];
-		
-		int rownum = 0;
-		while(x.next())
-		{
+		//while(//x.next())
+		//{
+			Vector<Object> temp = new Vector<Object>();
 			
-			searchReturn[rownum][0] = 
-			searchReturn[rownum][1] = 0;
-			searchReturn[rownum][2] = 0;
-			rownum++;
-		}
+			temp.add("cat1");
+			temp.add("title2");
+			temp.add(3);
+			
+			searchReturn.add(temp);
+		//}
 		
 		return searchReturn;
 		
 	}
-	*/
+	
 	
 	
 	
