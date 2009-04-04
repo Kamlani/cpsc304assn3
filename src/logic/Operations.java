@@ -10,7 +10,7 @@ public class Operations
 	private static Operations instance = null;
 	
 	
-	protected Operations() throws SQLException, ClassNotFoundException
+	public Operations() throws SQLException, ClassNotFoundException
 	{
 		// TO ENTER USER NAME AND PASSWORD
 		sql.Transactions.connect("user", "pass");	
@@ -26,11 +26,10 @@ public class Operations
 	
 	
 	// Clerk
-	
 	/* Takes in if its a cash or not, customer ID, name, cardNumber, and a JAVA.SQL.DATE expiry, array of UPC and quantity items (same size)
 	 * @returns true if cash purchase OR if credit purchase is valid. Returns false if credit purchase is invalid. IE request for cash if false!
 	 */
-	protected int inStorePurchase(boolean isCash, String cid, String name, String cardNum, int expiryYear, int expiryMonth, int[] UPC, int quatity[]) throws SQLException
+	public int inStorePurchase(boolean isCash, String cid, String name, String cardNum, int expiryYear, int expiryMonth, int[] UPC, int quatity[]) throws SQLException
 	{
 		
 		BigDecimal BD_cardNum = new BigDecimal(cardNum);
@@ -77,7 +76,7 @@ public class Operations
 	 * Takes the recieptID and name, inserts a return at the current date, adds return item for all
 	 * @Return the returnID, -1 otherwise
 	 */	
-	protected int processReturn(int recieptId, String name, int[] UPC, int[] quantity) throws SQLException 
+	public int processReturn(int recieptId, String name, int[] UPC, int[] quantity) throws SQLException 
 	{
 				
 		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
@@ -106,7 +105,7 @@ public class Operations
 	 * Takes the customerID, name, and creditcard info. inserts a return at the current date, adds all items to be purchased 
 	 * @Return the receiptID, -1 if creditcard rejected
 	 */		
-	protected int PurchaseOnlineItems(String cid, String name, String cardNum, int expiryYear, int expiryMonth, int[] UPC, int quantity[] ) throws SQLException
+	public int PurchaseOnlineItems(String cid, String name, String cardNum, int expiryYear, int expiryMonth, int[] UPC, int quantity[] ) throws SQLException
 	{
 		
 		BigDecimal BD_cardNum = new BigDecimal(cardNum);
@@ -137,7 +136,7 @@ public class Operations
 	}
 		
 	/*
-	protected String[][] searchItem(String category, String title, String singer, int quanity)
+	public String[][] searchItem(String category, String title, String singer, int quanity)
 	{
 		// Call Ophir code to get Result set searchResults
 		
@@ -172,7 +171,7 @@ public class Operations
 	
 	
 	
-	protected void Register(String cid, String password, String name, String address, String phone) throws SQLException 
+	public void Register(String cid, String password, String name, String address, String phone) throws SQLException 
 	{
 			sql.Transactions.createUsername(cid, password, name, address, phone);
 	}
@@ -181,7 +180,7 @@ public class Operations
 	// Manager
 
 	
-	protected void ProcessShipment(String supName, String storeName, int ShipYear, int ShipMonth, int ShipDate, int[] UPC, int[] quantity, double[] supPrice)
+	public void ProcessShipment(String supName, String storeName, int ShipYear, int ShipMonth, int ShipDate, int[] UPC, int[] quantity, double[] supPrice)
 	{
 		
 		Calendar c1 = Calendar.getInstance();
@@ -205,7 +204,7 @@ public class Operations
 	
 	
 	
-	protected void insertItemsToStore(String name, int[] UPC, int[] stock) throws SQLException
+	public void insertItemsToStore(String name, int[] UPC, int[] stock) throws SQLException
 	{
 		BigDecimal[] BD_UPC = new BigDecimal[UPC.length];
 		for(int i = 0; i < UPC.length; i++)
@@ -223,26 +222,26 @@ public class Operations
 	
 	
 	
-	protected void changeItemQuanity(String name, int UPC, int amount) throws SQLException
+	public void changeItemQuanity(String name, int UPC, int amount) throws SQLException
 	{
 			BigDecimal BD_UPC = new BigDecimal(UPC);			
 			sql.Transactions.modifyQuantityItemStore(name, BD_UPC, amount);
 	}
 	
 	
-	protected void DailySalesReport() // Not Really Void
+	public void DailySalesReport() // Not Really Void
 	{
 		
 	}
 	
-	protected void TopSellingItems() // Not Really Void
+	public void TopSellingItems() // Not Really Void
 	{
 		
 	}
 	
 
 	
-	protected void createItems(int[] UPC, String[] title, String[] type, String[] category, String[] company, int[] year, double[] sellPrice) throws SQLException
+	public void createItems(int[] UPC, String[] title, String[] type, String[] category, String[] company, int[] year, double[] sellPrice) throws SQLException
 	{
 		
 		BigDecimal[] BD_UPC = new BigDecimal[UPC.length];
@@ -260,26 +259,26 @@ public class Operations
 		
 	
 	
-	protected void insertLeadSinger(int UPC, String name) throws SQLException
+	public void insertLeadSinger(int UPC, String name) throws SQLException
 	{
 		BigDecimal BD_UPC = new BigDecimal(UPC);
 		sql.Transactions.insertLeadSinger(BD_UPC, name);
 	}
 	
 
-	protected void insertHasSong(int UPC, String title) throws SQLException
+	public void insertHasSong(int UPC, String title) throws SQLException
 	{
 		BigDecimal BD_UPC = new BigDecimal(UPC);
 		sql.Transactions.insertHasSong(BD_UPC, title);
 		
 	}
 	
-	protected void insertStore(String name, String address, String type) throws SQLException
+	public void insertStore(String name, String address, String type) throws SQLException
 	{
 		sql.Transactions.insertStore(name, address, type);
 	}
 		
-	protected void insertSupplier(String name, String address, String city, String status) throws SQLException
+	public void insertSupplier(String name, String address, String city, String status) throws SQLException
 	{
 		sql.Transactions.insertSupplier(name, address, city, status);
 	}
