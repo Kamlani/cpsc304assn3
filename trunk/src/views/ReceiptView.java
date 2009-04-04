@@ -22,7 +22,6 @@ import views.ReturnView.resultCheckAction;
 public class ReceiptView extends View {
 
 		private JPanel wrapperContainer;
-		private JPanel container;
 		private JPanel subPanel1;
 		private JScrollPane subPanel2;
 		private JPanel resultContainer;
@@ -108,7 +107,7 @@ public class ReceiptView extends View {
         
         private void updateResults() {
         	
-        	//EXAMPLE RESULT SETS FOR TOP SALES AND DAILY REPORT 
+        	//EXAMPLE RESULT SETS FOR RECEIPT ID
 
 			//GET THIS INFO FROM CONTROLLER AND POPULATE THESE RESULT SETS
         	
@@ -141,31 +140,9 @@ public class ReceiptView extends View {
         //LISTENER
         
         public class resultCheckAction implements ActionListener { 
-    		public void actionPerformed(ActionEvent e) {
-    			
-    			results.removeAllElements();
-    			
-    			//POPULATES RESULTS OF SEARCH FROM CONTROLLER HERE IS AN EXAMPLE
-    			Vector<Object> exampleResult = new Vector<Object>();
-    			exampleResult.add(123456789);
-    			exampleResult.add("Blah");
-    			exampleResult.add(2);
-    			
-    			Vector<Object> exampleResult2 = new Vector<Object>();
-    			exampleResult2.add(123456789);
-    			exampleResult2.add("Poop");
-    			exampleResult2.add(7);
-    			
-    			Vector<Object> exampleResult3 = new Vector<Object>();
-    			exampleResult3.add(123456789);
-    			exampleResult3.add("More Poop");
-    			exampleResult3.add(6);
-    			
-    			results.add(exampleResult);
-    			results.add(exampleResult2);
-    			results.add(exampleResult3);
-    			
+    		public void actionPerformed(ActionEvent e) {  			
     			updateResults();
+    			MainView.errorDialog("Receipt Updated");
     		}
     	}
   
