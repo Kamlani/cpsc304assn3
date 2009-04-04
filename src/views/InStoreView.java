@@ -143,6 +143,11 @@ public class InStoreView extends View {
 		//CONTROLLER LOGIC PURCHASE THE WHOLE CART!!!
 		this.getParent().getCart();
 		
+
+		//REFRESH THE INSTORE VIEW
+		refreshView();
+		
+		
 		
 		//STUFF FROM FRIDAY
 		
@@ -161,7 +166,10 @@ public class InStoreView extends View {
 	
 	
 	public void credit() {
-		this.getParent().switchView(4);		
+		this.getParent().switchView(4);	
+		
+		//REFRESH THE INSTORE VIEW
+		refreshView();
 	}
 	
 	private void addToCart(int item) {
@@ -198,6 +206,18 @@ public class InStoreView extends View {
 		
 	}
 	
+	
+	//HELPERS 
+	private void refreshView() {
+		for (int i = 0; i < maxPurchases; i++) {
+			upc[i].setVisible(false);
+			quantity[i].setVisible(false);
+			makePurchase[i].setVisible(false);
+			showPurchase[i].setVisible(true);
+		}
+	}
+	
+	//HELPERS
 	private void purchaseVis(int item, boolean vis) {
 		upc[item].setVisible(vis);
 		quantity[item].setVisible(vis);
@@ -206,6 +226,7 @@ public class InStoreView extends View {
 			showPurchase[item].setVisible(vis);
 		}
 	}
+
 	
 	
 	//LISTENERS
