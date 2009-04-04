@@ -185,6 +185,20 @@ public final class MainView {
 		}
 	}
 	
+	//OVERLOADED FOR INSTORE QUANTITY > 1 PURCHASE
+	
+	public boolean addItem(Vector<Object> item, int quantity) {
+		if (cart.size() < totalCartItems) {
+			
+			//DOESN'T USE QUANTITY BECAUSE IT'S Inside the item vector being passed in... DON'T WORRY ABOUT THIS
+			
+			cart.add(item);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void removeItem(int index) {
 		cart.removeElementAt(index);
 	}
