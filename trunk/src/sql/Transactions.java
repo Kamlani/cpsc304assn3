@@ -889,7 +889,7 @@ public class Transactions {
     }
    
    
-    public static int checkQuantity(String upc, String storeName) throws SQLException
+    public static int checkQuantity(BigDecimal upc, String storeName) throws SQLException
     {
         String sql = "SELECT stock FROM Stored WHERE upc = '" + upc + "' AND name = '" + storeName + "'";
         try
