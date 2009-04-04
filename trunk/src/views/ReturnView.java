@@ -33,7 +33,6 @@ public class ReturnView extends View {
 	private Panel searchRowPanel;
 	private JFormattedTextField searchSubPanelTitle;
 	private Panel searchPanel;
-
 	
 
 	public ReturnView (String title, MainView parent) {
