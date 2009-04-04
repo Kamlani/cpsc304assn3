@@ -675,13 +675,13 @@ public class Transactions {
 	// to get the quantity of an Item in a Store - Jomat
 	private static int getQuantityItemStore(String name, BigDecimal upc) throws SQLException
 	{
-		String sql = "SELECT SUM(stock) AS totalStock FROM Stored WHERE name = " + name + " AND upc = " + upc;
+		String sql = "SELECT stock FROM Stored WHERE name = " + name + " AND upc = " + upc;
 		try
 		{
 			Statement stmt = dbConn.createStatement();
 			ResultSet dbResult = stmt.executeQuery(sql);
 			dbConn.commit();
-			return dbResult.getInt("totalStock");	
+			return dbResult.getInt("stock");	
 		}
 		catch(SQLException ex)
 		{
@@ -909,7 +909,53 @@ public class Transactions {
 			
 			//ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), -5);
 			
-			System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
+			//System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
+			
+			System.out.println( createItem(	new BigDecimal (22), "The Numb 2", "CD", "New Age", 
+					"Corp 1", 2009, new BigDecimal (18)));
+			
+			System.out.println( createItem(	new BigDecimal (33), "The Numb 3", "DVD", "Pop", 
+					"Corp 2", 2000, new BigDecimal (12)));
+			
+			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "BOO", "Pop", 
+					"Corp 2", 2000, new BigDecimal (12)));
+			
+			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Loco", 
+					"Corp 2", 2000, new BigDecimal (12)));
+			
+			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+					"Corp 2", 2000, new BigDecimal (-12)));
+			
+			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+					"Corp 2", 2101, new BigDecimal (12)));
+			
+			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+					"Corp 2", 1849, new BigDecimal (12)));
+			
+			System.out.println("Inserting Singer & Songs in 22 & 23");
+			insertLeadSinger(new BigDecimal (22), "Bob Marley");
+			insertLeadSinger(new BigDecimal (33), "Tiesto");
+			insertLeadSinger(new BigDecimal (22), "Van Duel");
+			System.out.println("Inserted Singer in 22 & 23");
+			
+			insertHasSong(new BigDecimal (22), "No Woman No Cry");
+			insertHasSong(new BigDecimal (22), "No Woman No Cry Remix");
+			insertHasSong(new BigDecimal (22), "Liberation");
+			
+			insertHasSong(new BigDecimal (33), "Greece");
+			insertHasSong(new BigDecimal (33), "Best Remixes");
+			System.out.println("Inserted Songs in 22 & 23");
+			
+			deleteSupplier("Sup 1");
+			System.out.println("Delete Sup 1");
+			deleteSupplier("Sup 2");
+			System.out.println("Delete Sup 2");
+			
+			deliveryOrder(2, futureDate);
+			cal.set(2009, 12, 12);
+			futureDate = new Date(cal.getTime().getTime());
+			deliveryOrder(3, futureDate);
+			System.out.println("Updated Delivery of Purchase 2 & 3");
 			
 			Transactions.closeConnection();
 			System.out.println("Done");
