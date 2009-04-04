@@ -148,7 +148,6 @@ public class InStoreView extends View {
 		refreshView();
 		
 		
-		
 		//STUFF FROM FRIDAY
 		
 //		int thisUPC = Integer.parseInt(upc.getText());
