@@ -58,14 +58,14 @@ public class Transactions {
 	}
 	
 	// function to create a cash purchase (ie insert into Purchase)
-	public static int insertCashPurchase(Date date, String cid, String name) throws SQLException
+	public static int insertCashPurchase(Date date, String name) throws SQLException
 	{
 		String sql = "INSERT INTO Purchase VALUES( receiptId_counter.nextval, ?, ?, ?, ?, ?, ?, ?)" ;
 		try
 		{			
 			PreparedStatement ps = dbConn.prepareStatement(sql);
 			ps.setDate(1, date);
-			ps.setString(2, cid);
+			ps.setNull(2, Types.VARCHAR);
 			ps.setString(3, name);
 			ps.setNull(4, Types.DECIMAL);
 			ps.setNull(5, Types.DATE);
@@ -85,7 +85,7 @@ public class Transactions {
 	}
 	
 	// function to create a credit purchase (ie insert into Purchase)
-	public static int insertCreditPurchase(Date date, String cid, String name, 
+	public static int insertCreditPurchase(Date date, String name, 
 										 BigDecimal cardNum, Date expire) throws SQLException
 	{
 		String sql = "INSERT INTO Purchase VALUES( receiptId_counter.nextval, ?, ?, ?, ?, ?, ?, ?)" ;
@@ -93,7 +93,7 @@ public class Transactions {
 		{			
 			PreparedStatement ps = dbConn.prepareStatement(sql);
 			ps.setDate(1, date);
-			ps.setString(2, cid);
+			ps.setNull(2, Types.VARCHAR);
 			ps.setString(3, name);
 			ps.setBigDecimal(4, cardNum);
 			ps.setDate(5, expire);
@@ -673,7 +673,7 @@ public class Transactions {
 
 		
 	// to get the quantity of an Item in a Store - Jomat
-	private static int getQuantityItemStore(String name, BigDecimal upc) throws SQLException
+	public static int getQuantityItemStore(String name, BigDecimal upc) throws SQLException
 	{
 		String sql = "SELECT stock FROM Stored WHERE name = " + name + " AND upc = " + upc;
 		try
@@ -849,19 +849,17 @@ public class Transactions {
 	//  searchItem - Ophir
 	public static ResultSet searchItem(String category, String title, String singer, int quantity) throws SQLException
     {
-        String sql = "SELECT I.upc, I.title, St.stock from Item I, Stored St, LeadSinger L, Store S " +
+        String sql = "SELECT DISTINCT I.upc, I.title, St.stock from Item I, Stored St, LeadSinger L, Store S " +
                 " WHERE I.upc=L.upc AND I.upc=St.upc AND L.name LIKE '" + singer + "' AND I.category LIKE '"+ category + "'" +
                 " AND I.title LIKE '" + title + "' AND St.stock >= " + quantity + " AND St.name = S.name" +
-                " AND S.typeS ='OfNL'  rownum<=10";
+                " AND S.typeS ='ONL' AND  rownum<=10";
         try
         {
-            Statement stmt = dbConn.createStatement();
-            PreparedStatement ps = dbConn.prepareStatement(sql);
-            ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
-            dbConn.commit();
-            //ps.close();
-            return dbResult;
+	            Statement stmt = dbConn.createStatement();
+	            ResultSet dbResult = stmt.executeQuery(sql);
+	            System.out.println(sql);
+	            dbConn.commit();
+	            return dbResult;
         }
         catch (SQLException ex)
         {
@@ -870,6 +868,27 @@ public class Transactions {
         }
     }
 	
+	public static boolean checkUsernamePassword(String cid, String password) throws SQLException
+	{
+		String sql = "SELECT password FROM CUSTOMER WHERE cid = '" + cid + "'";
+		try
+		{
+		    Statement stmt = dbConn.createStatement();
+	        ResultSet dbResult = stmt.executeQuery(sql);
+	        //System.out.println(sql);
+	        dbConn.commit();
+	        dbResult.next();
+	        return dbResult.getString("password") == password;
+		}
+		catch(SQLException ex)
+		{
+			throw ex;
+		}
+       
+		
+	}
+	
+		
 // # # #   MAIN   # # #  ///
 	
 	public static void main(String[] args)
@@ -877,11 +896,14 @@ public class Transactions {
 		try
 		{
 			Transactions.connect("ora_b9e6", "a67101063");
-			
-			Date currentDate = new Date(System.currentTimeMillis());
-			Calendar cal = Calendar.getInstance();
-			cal.set(2009, 01, 01);
-			Date futureDate = new Date(cal.getTime().getTime());
+			if(checkUsernamePassword("jomat", "1234"))
+				System.out.println("Yes");
+			else
+				System.out.println("No");
+//			Date currentDate = new Date(System.currentTimeMillis());
+//			Calendar cal = Calendar.getInstance();
+//			cal.set(2009, 01, 01);
+//			Date futureDate = new Date(cal.getTime().getTime());
 			
 			// Jomat
 			// String a = insertStore("Store X", "12 Address", "ONL");
@@ -905,61 +927,61 @@ public class Transactions {
 			
 			//boolean ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), 4);
 			
-			System.out.println( getQuantityItemStore("Store X", new BigDecimal (123459)) );
+//			System.out.println( getQuantityItemStore("Store X", new BigDecimal (123459)) );
 			
 			//ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), -5);
 			
 			//System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
 			
-			System.out.println( createItem(	new BigDecimal (22), "The Numb 2", "CD", "New Age", 
-					"Corp 1", 2009, new BigDecimal (18)));
-			
-			System.out.println( createItem(	new BigDecimal (33), "The Numb 3", "DVD", "Pop", 
-					"Corp 2", 2000, new BigDecimal (12)));
-			
-			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "BOO", "Pop", 
-					"Corp 2", 2000, new BigDecimal (12)));
-			
-			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Loco", 
-					"Corp 2", 2000, new BigDecimal (12)));
-			
-			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
-					"Corp 2", 2000, new BigDecimal (-12)));
-			
-			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
-					"Corp 2", 2101, new BigDecimal (12)));
-			
-			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
-					"Corp 2", 1849, new BigDecimal (12)));
-			
-			System.out.println("Inserting Singer & Songs in 22 & 23");
-			insertLeadSinger(new BigDecimal (22), "Bob Marley");
-			insertLeadSinger(new BigDecimal (33), "Tiesto");
-			insertLeadSinger(new BigDecimal (22), "Van Duel");
-			System.out.println("Inserted Singer in 22 & 23");
-			
-			insertHasSong(new BigDecimal (22), "No Woman No Cry");
-			insertHasSong(new BigDecimal (22), "No Woman No Cry Remix");
-			insertHasSong(new BigDecimal (22), "Liberation");
-			
-			insertHasSong(new BigDecimal (33), "Greece");
-			insertHasSong(new BigDecimal (33), "Best Remixes");
-			System.out.println("Inserted Songs in 22 & 23");
-			
-			deleteSupplier("Sup 1");
-			System.out.println("Delete Sup 1");
-			deleteSupplier("Sup 2");
-			System.out.println("Delete Sup 2");
-			
-			deliveryOrder(2, futureDate);
-			cal.set(2009, 12, 12);
-			futureDate = new Date(cal.getTime().getTime());
-			deliveryOrder(3, futureDate);
-			System.out.println("Updated Delivery of Purchase 2 & 3");
-			
-			Transactions.closeConnection();
-			System.out.println("Done");
-			
+//			System.out.println( createItem(	new BigDecimal (22), "The Numb 2", "CD", "New Age", 
+//					"Corp 1", 2009, new BigDecimal (18)));
+//			
+//			System.out.println( createItem(	new BigDecimal (33), "The Numb 3", "DVD", "Pop", 
+//					"Corp 2", 2000, new BigDecimal (12)));
+//			
+//			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "BOO", "Pop", 
+//					"Corp 2", 2000, new BigDecimal (12)));
+//			
+//			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Loco", 
+//					"Corp 2", 2000, new BigDecimal (12)));
+//			
+//			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+//					"Corp 2", 2000, new BigDecimal (-12)));
+//			
+//			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+//					"Corp 2", 2101, new BigDecimal (12)));
+//			
+//			System.out.println( createItem(	new BigDecimal (44), "The Numb 4", "CD", "Pop", 
+//					"Corp 2", 1849, new BigDecimal (12)));
+//			
+//			System.out.println("Inserting Singer & Songs in 22 & 23");
+//			insertLeadSinger(new BigDecimal (22), "Bob Marley");
+//			insertLeadSinger(new BigDecimal (33), "Tiesto");
+//			insertLeadSinger(new BigDecimal (22), "Van Duel");
+//			System.out.println("Inserted Singer in 22 & 23");
+//			
+//			insertHasSong(new BigDecimal (22), "No Woman No Cry");
+//			insertHasSong(new BigDecimal (22), "No Woman No Cry Remix");
+//			insertHasSong(new BigDecimal (22), "Liberation");
+//			
+//			insertHasSong(new BigDecimal (33), "Greece");
+//			insertHasSong(new BigDecimal (33), "Best Remixes");
+//			System.out.println("Inserted Songs in 22 & 23");
+//			
+//			deleteSupplier("Sup 1");
+//			System.out.println("Delete Sup 1");
+//			deleteSupplier("Sup 2");
+//			System.out.println("Delete Sup 2");
+//			
+//			deliveryOrder(2, futureDate);
+//			cal.set(2009, 12, 12);
+//			futureDate = new Date(cal.getTime().getTime());
+//			deliveryOrder(3, futureDate);
+//			System.out.println("Updated Delivery of Purchase 2 & 3");
+//			
+//			Transactions.closeConnection();
+//			System.out.println("Done");
+//			
 			/*
 			String cid = "ophir";
 			String name = "ophir";
