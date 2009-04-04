@@ -1,10 +1,10 @@
 -- RANDOM DATA
 
-INSERT INTO Item VALUES (123456, 'Latin Music', 'CD', 'Pop', 'A Records', 2008, 9.99);
-INSERT INTO Item VALUES (123457, 'English Music', 'CD', 'Rock', 'B Records', 2007, 8.99);
-INSERT INTO Item VALUES (123458, 'European Music', 'CD', 'New Age', 'C Records', 2009, 9.59);
-INSERT INTO Item VALUES (123459, 'Video Sexy Music', 'DVD', 'Rap', 'D Records', 2008, 16.79);
-INSERT INTO Item VALUES (123455, 'Best Video Music', 'DVD', 'Instrumental', 'E Records', 2006, 18.29);
+INSERT INTO Item VALUES (123455, 'Latin Music', 'CD', 'Pop', 'A Records', 2008, 9.99);
+INSERT INTO Item VALUES (123456, 'English Music', 'CD', 'Rock', 'B Records', 2007, 8.99);
+INSERT INTO Item VALUES (123457, 'European Music', 'CD', 'New Age', 'C Records', 2009, 9.59);
+INSERT INTO Item VALUES (123458, 'Video Sexy Music', 'DVD', 'Rap', 'D Records', 2008, 16.79);
+INSERT INTO Item VALUES (123459, 'Best Video Music', 'DVD', 'Instrumental', 'E Records', 2006, 18.29);
 
 INSERT INTO LeadSinger VALUES (123456, 'Jomat');
 INSERT INTO LeadSinger VALUES (123456, 'Reggeaton');
@@ -49,4 +49,19 @@ INSERT INTO Shipment VALUES (shipment_counter.nextval, 'Sup B', 'Store 01', DATE
 INSERT INTO Shipment VALUES (shipment_counter.nextval, 'Sup C', 'Store 01', DATE '2009-03-23');
 INSERT INTO Shipment VALUES (shipment_counter.nextval, 'Sup B', 'Store 02', DATE '2009-03-24');
 INSERT INTO Shipment VALUES (shipment_counter.nextval, 'Sup D', 'Store 03', DATE '2009-03-25');
+
+INSERT INTO Stored VALUES ('Warehouse', 123455, 20);
+INSERT INTO Stored VALUES ('Warehouse', 123456, 20);
+INSERT INTO Stored VALUES ('Warehouse', 123457, 20);
+INSERT INTO Stored VALUES ('Store 01', 123455, 10);
+INSERT INTO Stored VALUES ('Store 01', 123456, 10);
+INSERT INTO Stored VALUES ('Store 01', 123458, 10);
+INSERT INTO Stored VALUES ('Store 02', 123455, 10);
+INSERT INTO Stored VALUES ('Store 02', 123457, 10);
+INSERT INTO Stored VALUES ('Store 02', 123459, 10);
+INSERT INTO Stored VALUES ('Store 03', 123458, 10);
+
+INSERT INTO Customer VALUES ('jomat', '1234', 'Joseph', '13 57 Ave', '1111111');
+INSERT INTO Customer VALUES ('matt', '1234', 'Matt', '24 68 Ave', '2222222');
+INSERT INTO Customer VALUES ('kahlil', '1234', 'Kahlil', '97 63 Ave', '3333333');
 
