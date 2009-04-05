@@ -142,10 +142,10 @@ INSERT INTO ReturnItem Values (2, 7, 1);
 
 -- QUERY OPHIR --
 
-SELECT DISTINCT I.upc, I.category, I.sellprice, SUM(PI.quantity) 
-FROM Item I, purchase P, PurchaseItem PI 
-WHERE I.upc = PI.upc AND P.receiptid = PI.receiptid AND P.dateP = '05-APR-09' AND  P.name ='Store 01' 
-GROUP BY I.upc, i.category, i.sellprice;
+-- SELECT DISTINCT I.upc, I.category, I.sellprice, SUM(PI.quantity) 
+-- FROM Item I, purchase P, PurchaseItem PI 
+-- WHERE I.upc = PI.upc AND P.receiptid = PI.receiptid AND P.dateP = '05-APR-09' AND  P.name ='Store 01' 
+-- GROUP BY I.upc, i.category, i.sellprice;
 
 
 
