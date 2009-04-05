@@ -1046,7 +1046,6 @@ public class Transactions {
 
 		
 // # # #   MAIN   # # #  ///
-<<<<<<< .mine
 	
 	public static void main(String[] args)
 	{
@@ -1082,26 +1081,6 @@ public class Transactions {
 			
 			// String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
 			// String d = insertSupplier("Sup 2", "57 Ave", "Langley", "N");
-=======
-   
-    public static void main(String[] args)
-    {
-        try
-        {
-            Transactions.connect("ora_t5q6", "a42058073");
-            System.out.println(checkQuantity(new BigDecimal("123455"), "Warehouse"));
-//            Date currentDate = new Date(System.currentTimeMillis());
-//            Calendar cal = Calendar.getInstance();
-//            cal.set(2009, 01, 01);
-//            Date futureDate = new Date(cal.getTime().getTime());
-           
-            // Jomat
-            // String a = insertStore("Store X", "12 Address", "ONL");
-            // String b = insertStore("Store Y", "34 Address", "STO");
-           
-            // String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
-            // String d = insertSupplier("Sup 2", "57 Ave", "Langley", "N");
->>>>>>> .r133
 
 			// int e = insertShipment("Sup 1", "Store X", futureDate);
 			
