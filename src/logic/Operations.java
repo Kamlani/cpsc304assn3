@@ -13,7 +13,7 @@ public class Operations
 	public Operations() throws SQLException, ClassNotFoundException
 	{
 		// TO ENTER USER NAME AND PASSWORD
-		sql.Transactions.connect("user", "pass");	
+		sql.Transactions.connect("ora_b9e6", "a67101063");	
 	}
 	
 	public static Operations getInstance() throws SQLException, ClassNotFoundException
@@ -49,6 +49,7 @@ public class Operations
 		
 		if(isCash)
 		{
+			
 			int recieptID = sql.Transactions.insertCashPurchase(date, name);
 			
 			for(int i = 0; i < UPC.length; i++)
@@ -60,7 +61,7 @@ public class Operations
 		{
 			if(Math.random() >= 0.5) // 50/50 chance the credit card is valid
 				{
-					int recieptID = sql.Transactions.insertCreditPurchase(date, cid, name, BD_cardNum, expiry);
+					int recieptID = sql.Transactions.insertCreditPurchase(date, name, BD_cardNum, expiry);
 					
 					for(int i = 0; i < UPC.length; i++)
 						sql.Transactions.addItemToPurchase(recieptID, BD_UPC[i], quatity[i]);
@@ -108,6 +109,9 @@ public class Operations
 	public int PurchaseOnlineItems(String cid, String name, String cardNum, int expiryYear, int expiryMonth, int[] UPC, int quantity[] ) throws SQLException
 	{
 		
+		System.out.println("IN THIS METHOD YO");
+		
+		
 		BigDecimal BD_cardNum = new BigDecimal(cardNum);
 		
 		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
@@ -123,40 +127,74 @@ public class Operations
 		
 		
 		
-		if(Math.random() >= 0.5) // 50/50 chance the credit card is valid
+		//if(Math.random() >= 0.5) // 50/50 chance the credit card is valid
+		if(true)
 		{
+			System.out.println(date.toString());
+			System.out.println(cid);
+			System.out.println(name);
+			System.out.println(BD_cardNum);
+			System.out.println(expire.toString());
+			System.out.println(expected.toString());
 			int recieptID = sql.Transactions.insertOnlinePurchase(date, cid, name, BD_cardNum, expire, expected);
+			System.out.println("RECIEPT ID YO" + recieptID);
+			
 			
 			for(int i = 0; i < UPC.length; i++)
 				sql.Transactions.addItemToPurchase(recieptID, BD_UPC[i], quantity[i]);	
+			
+			System.out.println("FINISHED ADDING ITEMS YO" + recieptID);
 			return recieptID;
 		}
+		
+		
 		
 		return -1;		
 	}
 	
 	
-	
-	public Vector<Object> searchItem(String category, String title, String singer, int quanity)
+	// WORKING
+	public Vector<Object> searchItem(String category, String title, String singer, int quanity) throws SQLException
 	{
-		// Call Ophir code to get Result set searchResults
 		
-		//ResultSet x
-
 	
+		
+		if(category == null || category.length()==0)
+		{
+			category = "";
+		}
+		if(title == null || title.length()==0)
+		{
+			category = "";
+		}
+		if(singer == null || singer.length()==0)
+		{
+			singer = "";
+		}
+		
+
+		category = category + "%";
+		title = title + "%";
+		singer = singer + "%";
+		
+		ResultSet x = sql.Transactions.searchItem(category, title, singer, quanity);
+		
+
 		Vector<Object> searchReturn = new Vector<Object>();
-		
-		
-		//while(//x.next())
-		//{
+			
+		while(x.next())
+		{		
 			Vector<Object> temp = new Vector<Object>();
 			
-			temp.add("cat1");
-			temp.add("title2");
-			temp.add(3);
+			BigDecimal bd = x.getBigDecimal("upc");
+			int intBD = bd.intValue();
+			
+			temp.add(intBD);
+			temp.add(x.getString("title"));
+			temp.add(x.getInt("stock"));
 			
 			searchReturn.add(temp);
-		//}
+		}
 		
 		return searchReturn;
 		
@@ -177,7 +215,7 @@ public class Operations
 	// Manager
 
 	
-	public void ProcessShipment(String supName, String storeName, int ShipYear, int ShipMonth, int ShipDate, int[] UPC, int[] quantity, double[] supPrice)
+	public void ProcessShipment(String supName, String storeName, int ShipYear, int ShipMonth, int ShipDate, int[] UPC, int[] quantity, double[] supPrice) throws SQLException
 	{
 		
 		Calendar c1 = Calendar.getInstance();
@@ -279,6 +317,143 @@ public class Operations
 	{
 		sql.Transactions.insertSupplier(name, address, city, status);
 	}
+	
+	public int getQuantity(String name, int upc) throws SQLException
+	{
+		BigDecimal BD_UPC = new BigDecimal(upc);	
+		return  sql.Transactions.checkQuantity(BD_UPC, name);
+		
+		
+	}
+	
+	public Vector<Object> getOnlineReceiptInfo(int rID) throws SQLException 
+	{
+		
+		BigDecimal receiptId = new BigDecimal(rID);
+		ResultSet x = sql.Transactions.getPurchaseItems(receiptId);
+		// upc, quantity, price
+		
+		Vector<Object> receiptInfo = new Vector<Object>();
+		
+		while(x.next())
+		{		
+			
+			Vector<Object> temp = new Vector<Object>();
+			
+			BigDecimal bd = x.getBigDecimal("upc");
+			int intBD = bd.intValue();		
+			temp.add(intBD);
+			
+			int q =x.getInt("quantity");
+				temp.add(q);
+			
+			BigDecimal bdPrice = x.getBigDecimal("sellPrice");
+			double doublePrice = bdPrice.doubleValue();			
+			temp.add(doublePrice);
+			
+			
+			receiptInfo.add(temp);
+			
+			System.out.println("U: " +intBD + "q: "+ q + "price" + doublePrice);
+			
+			
+		}
+		
+		System.out.println("RETURNING NOW!!");
+		return receiptInfo;
+	}
+	
+		// Ophir Written!
+	   private static Vector<Vector<String>> getDailyReportTable(ResultSet dbResult)
+	    {
+	        Vector<Vector<String>> cols = new Vector<Vector<String>>();
+	        java.text.DecimalFormat format = new java.text.DecimalFormat("#############.00");
+	        double categorySum = 0;
+	        int categoryCount = 0;
+	        double totalSum = 0;
+	        int totalCount = 0;
+	        int i=0;
+	        try
+	        {
+	            
+	            dbResult.next();
+	            
+	            Vector<String> row = new Vector<String>();
+	            BigDecimal upc = dbResult.getBigDecimal("upc");
+	            String category = dbResult.getString("Category");
+	            float price = dbResult.getFloat("sellPrice");
+	            int quantity = dbResult.getInt("quantity");
+	            float totalValue = dbResult.getFloat("totalValue");
+	            row.add(upc.toString());
+	            row.add(category);
+	            row.add( String.valueOf( price) );
+	            row.add(String.valueOf( quantity ));
+	            row.add( String.valueOf(totalValue ));
+	            cols.add(row);
+	            
+	            totalSum += totalValue;
+	            categorySum += totalValue;
+	            totalCount += quantity;
+	            categoryCount += quantity;
+	            
+	            while(dbResult.next())
+	            {
+	                if( ! category.equals(dbResult.getString("Category") ) )
+	                {
+	                    row = new Vector<String>();
+	                    row.add("");
+	                    row.add("Total");
+	                    row.add("");
+	                    row.add(String.valueOf(categoryCount));
+	                    row.add(format.format(categorySum));
+	                    categorySum = 0;
+	                    categoryCount = 0;
+	                    cols.add(row);
+	                }
+	                
+	                row = new Vector<String>();
+	                upc = dbResult.getBigDecimal("upc");
+	                category = dbResult.getString("Category");
+	                price = dbResult.getFloat("sellPrice");
+	                quantity = dbResult.getInt("quantity");
+	                totalValue = dbResult.getFloat("totalValue");
+	                row.add(upc.toString());
+	                row.add(category);
+	                row.add( String.valueOf( price) );
+	                row.add( String.valueOf( quantity ));
+	                row.add( format.format(totalValue )) ;
+	                cols.add(row);
+	                totalSum += price * quantity;
+	                categorySum += price * quantity;
+	                totalCount += quantity;
+	                categoryCount += quantity;
+
+	            }
+	        
+	            row = new Vector<String>();
+	            row.add("");
+	            row.add("");
+	            row.add("");
+	            row.add("");
+	            row.add("----------");
+	            cols.add(row);
+	            
+	            row = new Vector<String>();
+	            row.add("");
+	            row.add("Total Daily Sales");
+	            row.add("");
+	            row.add(String.valueOf(totalCount));
+	            row.add(format.format(totalSum));
+	            cols.add(row);
+	        }
+	        catch(SQLException ex)
+	        {
+	            System.out.println(i);
+	            views.MainView.errorDialog("Ohpir Error");
+	        }
+	        
+	        return cols;
+	    }
 
 	
 	
