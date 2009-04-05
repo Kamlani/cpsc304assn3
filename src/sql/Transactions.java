@@ -181,7 +181,7 @@ public class Transactions {
             ps.setInt(3, quantity);
             ps.executeUpdate();
             
-            String nameStore = getStore ( recieptId );
+            String nameStore = getStorePurch ( recieptId );
             
             // This function commits
             modifyQuantityItemStore( nameStore, upc, - quantity );
@@ -392,7 +392,13 @@ public class Transactions {
                 ps.setBigDecimal(2, upc);
                 ps.setInt(3, quantity);
                 ps.executeUpdate();
-                dbConn.commit();
+                // dbConn.commit();
+                
+                String nameStore = getStoreRet ( retId );
+                
+                // This function commits
+                modifyQuantityItemStore( nameStore, upc, quantity );
+                
                 ps.close();
             }
         }
@@ -614,9 +620,12 @@ public class Transactions {
             ps.setInt(4, quantity);
             ps.executeUpdate();
 
-            // This fucntion commits inside
-            
             updatePriceItem(upc, supPrice.multiply(new BigDecimal(1.2)));
+            
+            String nameStore = getStoreShipm ( sid );
+            
+            // This function commits
+            modifyQuantityItemStore( nameStore, upc, quantity );
             
             //dbConn.commit();
             ps.close();
@@ -1034,7 +1043,7 @@ public class Transactions {
    
     
    
- // changes the sell price after a shipment the delivery of the order (ie. Purchase) - Jomat
+ // changes the sell price after a shipment the delivery of the order (ie. Purchase) - Jomat Ok
     private static void updatePriceItem(BigDecimal upc, BigDecimal sellPrice) throws SQLException
     {
         String sql = "UPDATE Item SET sellPrice = " + sellPrice + " WHERE upc = " + upc;
@@ -1043,7 +1052,7 @@ public class Transactions {
             System.out.println(sql);
             Statement stmt = dbConn.createStatement();
             stmt.executeUpdate(sql);
-            dbConn.commit();
+            //dbConn.commit();
             stmt.close();
         }
         catch(SQLException ex)
@@ -1056,15 +1065,15 @@ public class Transactions {
     
     
     // get the Store Name - Ophir
-    public static String getStore(int receiptId) throws SQLException
+    public static String getStorePurch( int receiptId ) throws SQLException
     {
-         String sql = "SELECT name from Purchase WHERE receiptid= '" + receiptId + "'";
+         String sql = "SELECT name from Purchase WHERE receiptid = '" + receiptId + "'";
          try
          {
              Statement stmt = dbConn.createStatement();
              ResultSet dbResult = stmt.executeQuery(sql);
              System.out.println(sql);
-             dbConn.commit();
+             //dbConn.commit();
              dbResult.next();
              return dbResult.getString("name");
          }
@@ -1074,6 +1083,46 @@ public class Transactions {
          }
     }
 
+    
+    // get the Store Name - Jose
+    public static String getStoreShipm ( int sid ) throws SQLException
+    {
+        String sql = "SELECT name from Shipment WHERE sid = '" + sid + "'";
+        try
+        {
+            Statement stmt = dbConn.createStatement();
+            ResultSet dbResult = stmt.executeQuery(sql);
+            System.out.println(sql);
+            //dbConn.commit();
+            dbResult.next();
+            return dbResult.getString("name");
+        }
+        catch(SQLException ex)
+        {
+            throw ex;
+        }
+   }
+    
+    // get the Store Name - Jose
+    public static String getStoreRet ( int retId ) throws SQLException
+    {
+        String sql = "SELECT name from ReturnP WHERE retId = '" + retId + "'";
+        try
+        {
+            Statement stmt = dbConn.createStatement();
+            ResultSet dbResult = stmt.executeQuery(sql);
+            System.out.println(sql);
+            //dbConn.commit();
+            dbResult.next();
+            return dbResult.getString("name");
+        }
+        catch(SQLException ex)
+        {
+            throw ex;
+        }
+   }
+    
+    
     // get the Price of UPC - Ophir
     public static double getPrice(BigDecimal upc) throws SQLException
     {
@@ -1103,6 +1152,15 @@ public class Transactions {
         {
             Transactions.connect("ora_b9e6", "a67101063");
             
+            //addItemToPurchase(64, new BigDecimal(33), 1);
+            
+            // addItemToShipment(8, new BigDecimal(22), new BigDecimal (50), 4);
+            // addItemToShipment(8, new BigDecimal(33), new BigDecimal (40), 10);
+            // addItemToReturn(1, new BigDecimal (22), 2);
+            // addItemToReturn(1, new BigDecimal (33), 1);
+            
+                     
+            
 /*          Calendar cal = Calendar.getInstance();
             cal.set(2009, 06, 01);
             Date futureDate = new Date(cal.getTimeInMillis());
@@ -1128,6 +1186,9 @@ public class Transactions {
 
 
              Jomat
+             
+             addItemToShipment(8 , new BigDecimal (33), new BigDecimal(20), 5);
+             
              String a = insertStore("Store X", "12 Address", "ONL");
              String b = insertStore("Store Y", "34 Address", "STO");
 
