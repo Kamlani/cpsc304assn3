@@ -35,6 +35,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             printSQLError(ex);
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -56,6 +57,7 @@ public class Transactions {
         }
         catch(SQLException ex)
         {
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -82,6 +84,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
        
@@ -110,6 +113,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
        
@@ -139,6 +143,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -158,6 +163,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
 
@@ -182,10 +188,12 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
             {
+                ex.printStackTrace();
                 throw e;
             }
         }
@@ -208,6 +216,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
 
@@ -246,6 +255,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -267,7 +277,6 @@ public class Transactions {
                     ps.setInt(2, recieptId);
                     ps.setString(3, name);
                     ps.executeUpdate();
-                    System.out.println("Hello");
                     int returnId = getCurrentReturnID();    // commit is issued inside the function
                     ps.close();
                     return returnId;
@@ -285,6 +294,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
        
@@ -311,6 +321,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -332,6 +343,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
 
@@ -354,6 +366,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
 
@@ -383,6 +396,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -406,16 +420,17 @@ public class Transactions {
                 dbConn.commit();
                 //stmt.close();
                 dbResult.next();
-                System.out.println(recieptId);
-                System.out.println(upc);
-                System.out.println(quantity);
-                System.out.println(dbResult.getInt("retSum") >= quantity);
-                System.out.println(dbResult.getInt("retSum"));
+                //System.out.println(recieptId);
+                //System.out.println(upc);
+                //System.out.println(quantity);
+                //System.out.println(dbResult.getInt("retSum") >= quantity);
+                //System.out.println(dbResult.getInt("retSum"));
                 return ( dbResult.getInt("retSum") >= quantity);   
             }
             catch(SQLException ex)
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
         }
@@ -446,6 +461,7 @@ public class Transactions {
             catch(SQLException ex)
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
        
@@ -472,6 +488,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -492,6 +509,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -530,6 +548,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -569,6 +588,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -596,6 +616,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -627,6 +648,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -667,6 +689,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -687,12 +710,12 @@ public class Transactions {
             ResultSet dbResult = stmt.executeQuery(sql);
             dbConn.commit();
             dbResult.next();
-            System.out.println("Hello");
             return dbResult.getInt("stock");   
         }
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -752,6 +775,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -780,6 +804,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -808,6 +833,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
+                ex.printStackTrace();
                 throw ex;
             }
             catch(SQLException e)
@@ -817,14 +843,12 @@ public class Transactions {
         }
     }
    
-    // deletes an specified supplier - Jomat
+    // deletes an specified supplier - Jomat Ok
     public static void deleteSupplier(String name) throws SQLException
     {
         String sql = "DELETE FROM Supplier WHERE name = '" + name + "'";
         try
         {           
-            
-            System.out.println(sql);
             Statement stmt = dbConn.createStatement();
             stmt.executeUpdate(sql);
             dbConn.commit();
@@ -834,18 +858,20 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
    
    
-    // process the delivery of the order (ie. Purchase) - Jomat
+    // process the delivery of the order (ie. Purchase) - Jomat Ok
     public static void deliveryOrder(int receiptId, Date deliveredDate) throws SQLException
     {
-        String sql = "UPDATE Purchase SET deliveredDate = " + deliveredDate + " WHERE receiptId = " + receiptId;
+        String sql = "UPDATE Purchase SET deliveredDate = DATE '" + deliveredDate + "' WHERE receiptId = " + receiptId;
         try
         {           
-            Statement stmt = dbConn.prepareStatement(sql);
+            //System.out.println(sql);
+            Statement stmt = dbConn.createStatement();
             stmt.executeUpdate(sql);
             dbConn.commit();
             stmt.close();
@@ -853,6 +879,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -868,13 +895,14 @@ public class Transactions {
         {
                 Statement stmt = dbConn.createStatement();
                 ResultSet dbResult = stmt.executeQuery(sql);
-                System.out.println(sql);
+                //System.out.println(sql);
                 dbConn.commit();
                 return dbResult;
         }
         catch (SQLException ex)
         {
             dbConn.rollback();
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -888,14 +916,15 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
+            //System.out.println(sql);
             dbConn.commit();
             dbResult.next();
             return (dbResult.getString("password").equals(password));
         }
         catch(SQLException ex)
         {
-//            printSQLError(ex);
+//          printSQLError(ex);
+            ex.printStackTrace();
             return false;
         }
     }
@@ -909,13 +938,14 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
+            //System.out.println(sql);
             dbConn.commit();
             dbResult.next();
             return dbResult.getInt("stock");
         }
         catch(SQLException ex)
         {
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -928,12 +958,13 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
+            //System.out.println(sql);
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -950,13 +981,14 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql + "\n\n");
+            //System.out.println(sql + "\n\n");
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            System.out.println("ji");
+            System.out.println("DailyReportError");
+            ex.printStackTrace();
             printSQLError(ex);
             throw ex;
         }
@@ -977,13 +1009,14 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql + "\n\n");
+            //System.out.println(sql + "\n\n");
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            System.out.println("topsellingerror");
+            System.out.println("TopSellingError");
+            ex.printStackTrace();
             printSQLError(ex);
             throw ex;
         }
@@ -1000,135 +1033,125 @@ public class Transactions {
         try
         {
             Transactions.connect("ora_b9e6", "a67101063");
-            Calendar cal = Calendar.getInstance();
-            cal.set(2009, cal.APRIL, 4);
-            Date date1 = new Date(cal.getTime().getTime());
-            // ResultSet dbResult = getTopSellingItems(date1, 10);
-           
-           
-           
-//            System.out.println( date1.toString());
-//            ResultSet temp = getDailyReport(date1, "Store 01");
-//           
-//            Vector<Vector<String>> table = getDailyReportTable(temp);
-//           
-//            for(int i=0; i < table.size(); i++)
-//            {
-//                String row = table.get(i).get(0) + "  "  + table.get(i).get(1) + "  "  +  table.get(i).get(2) + "  ";
-//                row += table.get(i).get(3) + "  "  + table.get(i).get(4) + "  ";
-//                System.out.println(row);
-//                System.out.println(" --------------------------- ");
-//            }
-           
-           
-            //System.out.println(checkQuantity(a, "Store 01"));
-//            Date currentDate = new Date(System.currentTimeMillis());
-//            Calendar cal = Calendar.getInstance();
-//            cal.set(2009, 01, 01);
-//            Date futureDate = new Date(cal.getTime().getTime());
-           
-            // Jomat
-            // String a = insertStore("Store X", "12 Address", "ONL");
-            // String b = insertStore("Store Y", "34 Address", "STO");
-           
-            // String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
-            // String d = insertSupplier("Sup 2", "57 Ave", "Langley", "N");
+            
+/*          Calendar cal = Calendar.getInstance();
+            cal.set(2009, 06, 01);
+            Date futureDate = new Date(cal.getTimeInMillis());
 
-            // int e = insertShipment("Sup 1", "Store X", futureDate);
-           
-            // BigDecimal bdec = new BigDecimal (123459);
-            // BigDecimal bdec2 = new BigDecimal (123456);
-            // BigDecimal pric = new BigDecimal (11.99);
-            // addItemToShipment(8,  bdec, pric, 7);
-            // addItemToShipment(8, bdec2 , pric, 3);
-           
-            // insertItemToStore("Store X", new BigDecimal (123459), 8);
-            // insertItemToStore("Store Y", new BigDecimal (123455), 2);
-           
-                     
-            // boolean ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), 5);
-            // System.out.println( checkQuantity(new BigDecimal (123459), "Store X") + "<- Quantity | Check -> " + ckeck);
-            // ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), -5);
-            // System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
-           
-//           System.out.println( createItem(    new BigDecimal (22), "The Numb 2", "CD", "New Age",
-//                    "Corp 1", 2009, new BigDecimal (18)));
-//           
-//           System.out.println( createItem(    new BigDecimal (33), "The Numb 3", "DVD", "Pop",
-//                    "Corp 2", 2000, new BigDecimal (12)));
-//           
-//           System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "BOO", "Pop",
-//                    "Corp 2", 2000, new BigDecimal (12)));
-//           
-//            System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Loco",
-//                    "Corp 2", 2000, new BigDecimal (12)));
-//           
-//            System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
-//                    "Corp 2", 2000, new BigDecimal (-12)));
-//           
-//            System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
-//                    "Corp 2", 2101, new BigDecimal (12)));
-//           
-//            System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
-//                    "Corp 2", 1849, new BigDecimal (12)));
-//           
-//            System.out.println("Inserting Singer & Songs in 22 & 23");
-//            insertLeadSinger(new BigDecimal (22), "Bob Marley");
-//            insertLeadSinger(new BigDecimal (33), "Tiesto");
-//            insertLeadSinger(new BigDecimal (22), "Van Duel");
-//            System.out.println("Inserted Singer in 22 & 23");
-           
-//            insertHasSong(new BigDecimal (22), "No Woman No Cry");
-//            insertHasSong(new BigDecimal (22), "No Woman No Cry Remix");
-//            insertHasSong(new BigDecimal (22), "Liberation");
-//           
-//            insertHasSong(new BigDecimal (33), "Greece");
-//            insertHasSong(new BigDecimal (33), "Best Remixes");
-//            System.out.println("Inserted Songs in 22 & 23");
-//           
-            deleteSupplier("Sup 1");
-            System.out.println("Delete Sup 1");
-            deleteSupplier("Sup 2");
-            System.out.println("Delete Sup 2");
-//           
-//            deliveryOrder(2, futureDate);
-//            cal.set(2009, 12, 12);
-//            futureDate = new Date(cal.getTime().getTime());
-//            deliveryOrder(3, futureDate);
-//            System.out.println("Updated Delivery of Purchase 2 & 3");
-//           
-//            Transactions.closeConnection();
-//            System.out.println("Done");
-//           
-            /*
-            String cid = "ophir";
-            String name = "ophir";
-            Date currentDate = new Date(System.currentTimeMillis());
-            int rid = insertCashPurchase(currentDate, cid, name);
-            System.out.println(rid);
-            Calendar cal = Calendar.getInstance();
-            cal.set(2011, 10, 1);
-            Date futureDate = new Date(cal.getTime().getTime());
-            BigDecimal cardnum = new BigDecimal("1111222233334444");
-            rid = insertCreditPurchase(currentDate, cid, name, cardnum, futureDate);
-            System.out.println(rid);
-            cal.setTime(currentDate);
-            cal.set(cal.get(cal.YEAR),  cal.get(cal.MONTH), cal.get(cal.DATE) + 40 );
-            Date expected = new Date(cal.getTime().getTime());
-            rid = insertOnlinePurchase(currentDate, cid, name, cardnum, futureDate, expected);
-            System.out.println(rid);
-            */
-           
-            // Jomat
-            // boolean temp1 = checkReceiptIDReturn(125);
-            // boolean temp2 = checkDateReturn (26);
-            // long paymType = returnCashCredit(41);
-            // BigDecimal a = new BigDecimal (1234);
-            // boolean temp3 = checkItemIDReturn(19, a, 3);
-            // int numReceipt = insertReturn(currentDate, 19, "ophir");
-            // BigDecimal b = new BigDecimal(1235);
-            // addItemToReturn(8, b, 2);
-            // createUsername("george", "hello", "George", "Here at UBC", 123 );
+            deliveryOrder(12, futureDate);
+            deliveryOrder(42, futureDate);
+            System.out.println("Updated Delivery of Purchase 2 & 3");
+
+            ResultSet dbResult = getTopSellingItems(date1, 10);
+
+            System.out.println( date1.toString());
+            ResultSet temp = getDailyReport(date1, "Store 01");
+
+            Vector<Vector<String>> table = getDailyReportTable(temp);
+
+            for(int i=0; i < table.size(); i++)
+            {
+                String row = table.get(i).get(0) + "  "  + table.get(i).get(1) + "  "  +  table.get(i).get(2) + "  ";
+                row += table.get(i).get(3) + "  "  + table.get(i).get(4) + "  ";
+                System.out.println(row);
+                System.out.println(" --------------------------- ");
+            }
+
+
+             Jomat
+             String a = insertStore("Store X", "12 Address", "ONL");
+             String b = insertStore("Store Y", "34 Address", "STO");
+
+             String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
+             String d = insertSupplier("Sup 2", "57 Ave", "Langley", "N");
+
+             int e = insertShipment("Sup 1", "Store X", futureDate);
+
+             BigDecimal bdec = new BigDecimal (123459);
+             BigDecimal bdec2 = new BigDecimal (123456);
+             BigDecimal pric = new BigDecimal (11.99);
+             addItemToShipment(8,  bdec, pric, 7);
+             addItemToShipment(8, bdec2 , pric, 3);
+
+             insertItemToStore("Store X", new BigDecimal (123459), 8);
+             insertItemToStore("Store Y", new BigDecimal (123455), 2);
+
+
+             boolean ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), 5);
+             System.out.println( checkQuantity(new BigDecimal (123459), "Store X") + "<- Quantity | Check -> " + ckeck);
+             ckeck = modifyQuantityItemStore("Store X", new BigDecimal (123459), -5);
+             System.out.println(getQuantityItemStore("Store X", new BigDecimal (123459)));
+
+             System.out.println( createItem(    new BigDecimal (22), "The Numb 2", "CD", "New Age",
+                    "Corp 1", 2009, new BigDecimal (18)));
+
+                System.out.println( createItem(    new BigDecimal (33), "The Numb 3", "DVD", "Pop",
+                    "Corp 2", 2000, new BigDecimal (12)));
+
+                System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "BOO", "Pop",
+                    "Corp 2", 2000, new BigDecimal (12)));
+
+             System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Loco",
+                    "Corp 2", 2000, new BigDecimal (12)));
+
+             System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
+                    "Corp 2", 2000, new BigDecimal (-12)));
+
+             System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
+                    "Corp 2", 2101, new BigDecimal (12)));
+
+             System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Pop",
+                    "Corp 2", 1849, new BigDecimal (12)));
+
+             System.out.println("Inserting Singer & Songs in 22 & 23");
+             insertLeadSinger(new BigDecimal (22), "Bob Marley");
+             insertLeadSinger(new BigDecimal (33), "Tiesto");
+             insertLeadSinger(new BigDecimal (22), "Van Duel");
+             System.out.println("Inserted Singer in 22 & 23");
+
+             insertHasSong(new BigDecimal (22), "No Woman No Cry");
+             insertHasSong(new BigDecimal (22), "No Woman No Cry Remix");
+             insertHasSong(new BigDecimal (22), "Liberation");
+
+             insertHasSong(new BigDecimal (33), "Greece");
+             insertHasSong(new BigDecimal (33), "Best Remixes");
+             System.out.println("Inserted Songs in 22 & 23");
+
+             deleteSupplier("Sup 2");
+             System.out.println("Delete Sup 2");
+
+             Transactions.closeConnection();
+             System.out.println("Done");
+
+             String cid = "ophir";
+             String name = "ophir";
+             Date currentDate = new Date(System.currentTimeMillis());
+             int rid = insertCashPurchase(currentDate, cid, name);
+             System.out.println(rid);
+
+             BigDecimal cardnum = new BigDecimal("1111222233334444");
+             rid = insertCreditPurchase(currentDate, cid, name, cardnum, futureDate);
+             System.out.println(rid);
+             cal.setTime(currentDate);
+             cal.set(cal.get(cal.YEAR),  cal.get(cal.MONTH), cal.get(cal.DATE) + 40 );
+             Date expected = new Date(cal.getTime().getTime());
+             rid = insertOnlinePurchase(currentDate, cid, name, cardnum, futureDate, expected);
+             System.out.println(rid);
+
+             Jomat
+             boolean temp1 = checkReceiptIDReturn(125);
+             boolean temp2 = checkDateReturn (26);
+             long paymType = returnCashCredit(41);
+             BigDecimal a = new BigDecimal (1234);
+             boolean temp3 = checkItemIDReturn(19, a, 3);
+             int numReceipt = insertReturn(currentDate, 19, "ophir");
+             BigDecimal b = new BigDecimal(1235);
+             addItemToReturn(8, b, 2);
+             createUsername("george", "hello", "George", "Here at UBC", 123 );
+*/
+            
+            Transactions.closeConnection();
+            System.out.println("Done");
         }
         catch(Exception ex)
         {
