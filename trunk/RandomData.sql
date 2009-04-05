@@ -90,6 +90,7 @@ INSERT INTO ShipItem Values (7, 7, 5.03, 14);
 INSERT INTO Customer VALUES ('jomat', '1234', 'Joseph', '13 57 Ave', '1111111');
 INSERT INTO Customer VALUES ('matt', '1234', 'Matt', '24 68 Ave', '2222222');
 INSERT INTO Customer VALUES ('kahlil', '1234', 'Kahlil', '97 63 Ave', '3333333');
+INSERT INTO Customer VALUES ('StoreClient', '0', 'StoreClient', 'Storese', '0000000');
 
 
 INSERT INTO Purchase Values (receiptId_counter.nextval, DATE '2009-04-04' ,'jomat', 'Store 01', 0, null, null, null);
