@@ -50,6 +50,8 @@ public class InStoreView extends View {
 		
 		
 		createLoginPanels();
+		MainView.isOnlinePurchase = false;
+		
 	}
 	
 	private void createLoginPanels () {

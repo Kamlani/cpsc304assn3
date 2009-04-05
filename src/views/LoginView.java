@@ -192,10 +192,12 @@ public class LoginView extends View {
 	
 	public class loginAction implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
+			
 			for (int i = 0; i < 3; i++) {
 				if (e.getSource() == loginButton[i]) {
 					
 					//Controller CODE FOR AUTHORIZATION GOES HERE
+					MainView.cid = loginName[0].getText();
 					login(2);
 				}
 			}

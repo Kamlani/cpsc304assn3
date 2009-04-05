@@ -189,7 +189,10 @@ public class CustomerCheckoutView extends View {
 	private void submitOrder() {
 		//CONTROLLER LOGIC FOR SUBMITTING AN ORDER
 		//SWITCH TO CREDIT CARD VIEW
+		
+		//views.MainView.currQuantity = new int[]
 		this.getParent().switchView(4);
+		MainView.isOnlinePurchase = true;
 	}
 	
 	

@@ -8,7 +8,7 @@ public class View {
 	
 	private MainView thisParent;
 	
-	public Operations thisController;
+	public static Operations thisController;
 	
 	private Panel mainContainer;
 	private Panel container;
@@ -16,7 +16,7 @@ public class View {
 	
 	public Color bg1;
 	public Color bg2;
-	public Color bg3;
+	public static Color bg3;
 	
 	public Font font1;
 	public Font font2;

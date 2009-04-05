@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -106,30 +107,116 @@ public class ReceiptView extends View {
     		
     	}//SEARCH PANEL
         
+        String x = "5";
+     //   ResultSet exampleReceipt;
+        int counter = 0;
         
         private void updateResults() {
+        	
+        	
+        	
+        	x = x + "1";
+        	String header;
+    		String[] titles = { "UPC", "Quantity", "Price"+x };
+
+    		if (true)
+    		{
+    			
+
+    			try
+    			{
+    			header = "Online Bill" + x;
+    			
+    				Vector<Object> rIDInfo = thisController.getOnlineReceiptInfo(CreditCardView.currReceiptID);
+    	        	System.out.println("Returend Here yo");
+    	        	
+    	    		String[] UPC = new String[rIDInfo.size()];
+    	    		String[] quantity = new String[rIDInfo.size()];
+    	    		String[] price = new String[rIDInfo.size()];
+    	    		
+    				for(int i = 0; i < rIDInfo.size(); i++)
+    				{
+    					Vector<Object> temp = (Vector<Object>)rIDInfo.get(i);
+    	    			
+    					if(temp.get(0) != null && temp.get(2) != null)
+    					{
+
+    						Integer Iupc = ((Integer)temp.get(0)).intValue();
+    						Integer Iquantity = ((Integer)temp.get(1)).intValue();
+    						Double Iprice = ((Double)temp.get(2)).doubleValue();
+    	    				
+    						UPC[i] = Iupc.toString();
+    						quantity[i] = Iquantity.toString();
+    						price[i] = Iprice.toString(); 
+    	    				
+    					}
+    	    			
+    	    			                                   	
+    				}
+    	    		
+    
+    							int rows = 2;//UPC.length;
+    							int cols = 3;
+    							int cellWidth = 200;
+    							Object[][] results = new Object[rows][cols];
+    							for (int i = 0; i < rows; i++)
+    			{
+    				results[i][0] = x;//UPC[i];
+    				results[i][1] = x;//quantity[i];
+    				results[i][2] = x;//price[i];
+    			}
+
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
         	
         	//EXAMPLE RESULT SETS FOR RECEIPT ID
 
 			//GET THIS INFO FROM CONTROLLER AND POPULATE THESE RESULT SETS
         	
-            int rows = 15;
-            int cols = 3;
-            int cellWidth = 200;
-            String header = "Customer Receipt: ";
-            String[] titles = {"Result Col 1","Result Col 2","Result Col 3"};
-           
-            String[][] results = new String[rows][cols];
-            for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                            results[i][j] = "Example Result: " + i + " , " + j;
-                    }
-            }
             
             //EXAMPLE
+    							
             
-			ResultSet exampleReceipt = new ResultSet(header,titles,results,cellWidth);
-		
+          ResultSet exampleReceipt = new ResultSet(header,titles,results,cellWidth);
+            
+            
+      
+            
+            
+            
 			resultContainer = exampleReceipt.getContainer();
 			resultContainer.setPreferredSize(new Dimension(512, 64 + rows * 20)); //DONT F*** THIS UP
 			
@@ -140,15 +227,22 @@ public class ReceiptView extends View {
 			//SPECIAL COMMENT FOR YOU GUYS
 ////////////////////////////////////////////////////////////////////////////
 			
-			totalPrice.setText("" + 5);
-			shipDays.setText("" + 5);
+			totalPrice.setText("" + x);
+			shipDays.setText("" + x);
 			
 /////////////////////////////////////////////////////////////////////////////
-			//SPECIAL COMMENT FOR YOU GUYS
+			//SPEaCIAL COMMENT FOR YOU GUYS
 ////////////////////////////////////////////////////////////////////////////
 			
 			wrapperContainer.validate();
+			resultContainer.validate();
+    			}
+    			catch(SQLException x34)
+    			{}
+    			
         }
+        }
+        
         
         
         private void createTotals () {
@@ -180,8 +274,11 @@ public class ReceiptView extends View {
         //LISTENER
         
         public class resultCheckAction implements ActionListener { 
-    		public void actionPerformed(ActionEvent e) {  			
+    		public void actionPerformed(ActionEvent e) {
+    			//resultContainer.removeAll();
+    		//	init();
     			updateResults();
+    		//	wrapperContainer.validate();
     			MainView.errorDialog("Receipt Updated");
     		}
     	}

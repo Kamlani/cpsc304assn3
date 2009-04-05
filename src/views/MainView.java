@@ -23,9 +23,11 @@ public final class MainView {
 	private static String[] buttonText;
 	private static Button[] buttons;
 	
-	private static String cid; //CUSTOMER ID
+	protected static String cid; //CUSTOMER ID
 	private static int totalCartItems; //MAX CART ITEMS
 	private static Vector<Object> cart; //USE ARRAYS IN THE VECTOR WITH YOUR INFO FOR EACH ITEM THAT NEEDS TO BE DISPLAYED
+
+	protected static boolean isOnlinePurchase;
 	
 	public MainView () {
 		
@@ -153,6 +155,7 @@ public final class MainView {
 		}
 		//UPDATE VIEWS
 		((CustomerCheckoutView)views[3]).update();
+		//((ReceiptView)views[8]).init();
 		mainFrame.validate();
 	}//SWITCH VIEW
 	

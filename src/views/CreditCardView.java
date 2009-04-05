@@ -3,8 +3,13 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Vector;
 
 import javax.swing.*;
+
+import oracle.sql.DATE;
 
 import views.MainView.buttonAction;
 
@@ -24,6 +29,7 @@ public class CreditCardView extends View {
 	private JFormattedTextField cardExpiryYear;
 	private Panel container;
 
+	protected static int currReceiptID;
 	public CreditCardView (String title, MainView parent) {
 		
 		//default setup methods defined in View.java
@@ -127,12 +133,128 @@ public class CreditCardView extends View {
 		
 	}//Login PANELs
 	
-	private void submitCard() {
+	private void submitCard() 
+	{
+		
+		if(MainView.isOnlinePurchase)
+		{
+		
+		
+		int cartSize = this.getParent().getCart().size();
+		int[] UPC = new int[cartSize];
+		int[] quantity = new int[cartSize];
+		for(int i = 0; i < cartSize; i++)
+		{
+			Vector<Object> temp = (Vector<Object>)this.getParent().getCart().get(i);
+			
+			if(temp.get(0) != null && temp.get(2) != null)
+			{
+			UPC[i] = ((Integer)temp.get(0)).intValue();
+			quantity[i] = ((Integer)temp.get(2)).intValue();
+			}
+			                                   	
+		}
+		
+		
+		try 
+		{
+			/*System.out.println("Hi");
+			System.out.println(this.getParent().getCID());
+			System.out.println(cardNumber.getText());
+			System.out.println(cardExpiryYear.getText());
+			System.out.println(cardExpiryMonth.getText());
+			*/
+			for(int i = 0; i < UPC.length; i++)
+			{
+				System.out.print(UPC[i] + " ");
+			}
+			
+			for(int i = 0; i < UPC.length; i++)
+			{
+				System.out.print(quantity[i] + " ");
+			}
+			
+			
+			if(cardExpiryYear.getText().length()==0 || cardExpiryMonth.getText().length()==0 || this.getParent().getCID() == null || cardNumber.getText().length()==0 || Integer.parseInt(cardExpiryYear.getText()) <= 2009 || Integer.parseInt(cardExpiryMonth.getText()) > 12)
+			{
+				MainView.errorDialog("Invalid Input");
+				return;
+			}
+				
+			
+			int x = thisController.PurchaseOnlineItems(this.getParent().getCID(), "Warehouse", cardNumber.getText(), Integer.parseInt(cardExpiryYear.getText()), Integer.parseInt(cardExpiryMonth.getText()), UPC, quantity);
+			if(x == -1)
+			{
+				MainView.errorDialog("Sorry Invalid/Rejected Credit Card. Try Again");
+				return;
+			}
+			else
+			{
+				currReceiptID = x;
+			//	ReceiptView.updateResults();
+			}
+				
+				
+		} 
+		catch (NumberFormatException e) 
+		{
+			
+			MainView.errorDialog("Bad Input Values");
+			return;
+		} 
+		catch (SQLException e) 
+		{
+			MainView.errorDialog("Sorry Invalid/Rejected Credit Card. Try Again");
+			return;
+		}
+		
 		//CONTROLLER LOGIC FOR CHECKING CREDIT CARD
 		
 		//IF SUCCESSFUL SEND TO RECEIPT VIEW
 		
 		this.getParent().switchView(8);
+	}
+		else
+		{
+			if(cardExpiryYear.getText().length()==0 || cardExpiryMonth.getText().length()==0 || this.getParent().getCID() == null || cardNumber.getText().length()==0 || Integer.parseInt(cardExpiryYear.getText()) <= 2009 || Integer.parseInt(cardExpiryMonth.getText()) > 12)
+			{
+				MainView.errorDialog("Invalid Input");
+				return;
+			}
+			
+			
+			try 
+			{
+			//	int x = thisController.inStorePurchase(false, this.getParent().getCID(), "default", cardNumber.getText(), Integer.parseInt(cardExpiryYear.getText()), Integer.parseInt(cardExpiryMonth.getText()), InStoreView.intUPC, InStoreView.intQuantity);
+				//if( x == -1)
+				//{
+					MainView.errorDialog("Sorry Invalid/Rejected Credit Card. Try Again");
+					return;
+				//}
+			}
+					
+			
+			catch (NumberFormatException e) 
+			{
+				
+				MainView.errorDialog("Bad Input Values");
+				return;
+			} 
+		//	catch (SQLException e) 
+		//	{
+			//	MainView.errorDialog("Sorry Invalid/Rejected Credit Card. Try Again");
+			//	return;
+			//}
+				
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}
