@@ -454,6 +454,48 @@ public class Operations
 	        
 	        return cols;
 	    }
+	   
+	   // Ophir
+	    private static Vector<Vector<String>> getTopSellingTable(ResultSet dbResult)
+
+	    {
+	        Vector<Vector<String>> cols = new Vector<Vector<String>>();
+	        Vector<String> row;
+	        try
+	        {
+	            String upc;
+	            String title;
+	            String company;
+	            String stock;
+	            String totalSold;
+	          
+	            while(dbResult.next())
+	            {
+	               
+	                row = new Vector<String>();
+	                upc = dbResult.getString("upc");
+	                title = dbResult.getString("Title");
+	                company = dbResult.getString("company");
+	                stock = dbResult.getString("stock");
+	                totalSold = dbResult.getString("totalSold");
+	                row.add(upc);
+	                row.add( title );
+	                row.add( company );
+	                row.add( stock );
+	                row.add( totalSold ) ;
+
+	                cols.add(row);
+	            }
+	      
+	        }
+	        catch(SQLException ex)
+	        {
+	            views.MainView.errorDialog("Ohpir Error 2");
+	        }
+	      
+	        return cols;
+	    }
+
 
 	
 	
