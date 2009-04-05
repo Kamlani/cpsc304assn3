@@ -81,6 +81,7 @@ public class ResultSet {
                 }
 
                 container.validate();
+                
         }
         
         public JPanel getContainer() {

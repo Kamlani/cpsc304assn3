@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -52,11 +53,12 @@ public class CustomerOnlineView extends View {
 		resultQuantity = new JFormattedTextField[totalResultRows];
 		
 		results = new Vector<Object>();// INIT TO SIZE 0
-		
+	//	MainView.isOnlinePurchase = true;
 		init();
 	}
 	
 	private void init() {
+		
 		createSearchPanel();
 		createResultPanel();
 	}
@@ -268,20 +270,30 @@ public class CustomerOnlineView extends View {
 		public void actionPerformed(ActionEvent e) {
 			
 			results.removeAllElements();
-			if (!searchQuantity.getText().isEmpty()) 
+			
+			try
+			{
+			if (!(searchQuantity.getText().length()==0)) 
 			{
 				results = thisController.searchItem(searchCategory.getText(),
 						searchTitle.getText(),
-						searchCategory.getText(),
+						searchSinger.getText(),
 						Integer.parseInt(searchQuantity.getText()));
 			} else { 
 				results = thisController.searchItem(searchCategory.getText(),
 						searchTitle.getText(),
-						searchCategory.getText(),
+						searchSinger.getText(),
 						1);
 			}
 			
+			
+			
 			update();
+			}
+			catch(SQLException e9)
+			{
+				MainView.errorDialog("Nothing Found!");
+			}
 		}
 	}
 	
@@ -303,9 +315,9 @@ public class CustomerOnlineView extends View {
 			update();
 			
 			Vector<Object> itemAdd = new Vector<Object>();
-			itemAdd.add(((Vector)results.get(item)).get(0));
-			itemAdd.add(((Vector)results.get(item)).get(1));
-			itemAdd.add(((Vector)results.get(item)).get(2));
+			itemAdd.add(((Vector)results.get(item)).get(0)); // UPC
+			itemAdd.add(((Vector)results.get(item)).get(1)); // NAME
+			itemAdd.add(((Vector)results.get(item)).get(2)); // QUANTITY
 			this.getParent().addItem( itemAdd );
 			
 			((CustomerCheckoutView) this.getParent().getView(3)).update();
