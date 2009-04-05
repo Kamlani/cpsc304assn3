@@ -931,7 +931,7 @@ public class Transactions {
         try
         {
             Transactions.connect("ora_t5q6", "a42058073");
-            System.out.println(checkQuantity("123455", "Warehouse"));
+            System.out.println(checkQuantity(new BigDecimal("123455"), "Warehouse"));
 //            Date currentDate = new Date(System.currentTimeMillis());
 //            Calendar cal = Calendar.getInstance();
 //            cal.set(2009, 01, 01);
