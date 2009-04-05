@@ -180,7 +180,12 @@ public class Transactions {
             ps.setBigDecimal(2, upc);
             ps.setInt(3, quantity);
             ps.executeUpdate();
-            dbConn.commit();
+            
+            String nameStore = getStore ( recieptId );
+            
+            // This function commits
+            modifyQuantityItemStore( nameStore, upc, - quantity );
+            
             ps.close();
         }
         catch(SQLException ex)
@@ -608,7 +613,12 @@ public class Transactions {
             ps.setBigDecimal(3, supPrice);
             ps.setInt(4, quantity);
             ps.executeUpdate();
-            dbConn.commit();
+
+            // This fucntion commits inside
+            
+            updatePriceItem(upc, supPrice.multiply(new BigDecimal(1.2)));
+            
+            //dbConn.commit();
             ps.close();
         }
         catch(SQLException ex)
@@ -972,27 +982,27 @@ public class Transactions {
     // - Ophir
     public static ResultSet getDailyReport(Date date, String storeName) throws SQLException
     {
-        String sql = "SELECT DISTINCT I.upc, I.category, I.sellprice, SUM(PI.quantity) AS quantity, I.sellPrice*PI.quantity as totalValue from " +
+        String sql = "SELECT DISTINCT I.upc, I.category, I.sellprice, SUM(PI.quantity) AS quantity from " +
                 "Item I, Purchase P, PurchaseItem PI WHERE " +
                 " I.upc = PI.upc AND P.receiptid = PI.receiptid AND P.dateP = date '" + date.toString() + "' AND P.name = '" + storeName + "' " +
-                " GROUP BY I.upc, I.category, I.sellprice, I.sellPrice*PI.quantity ORDER BY CATEGORY ASC";
+                " GROUP BY I.upc, I.category, I.sellprice ORDER BY CATEGORY ASC";
        
         try
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            //System.out.println(sql + "\n\n");
+            System.out.println(sql + "\n\n");
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            System.out.println("DailyReportError");
-            ex.printStackTrace();
+            System.out.println("ji");
             printSQLError(ex);
             throw ex;
         }
     }
+
     
     // produces a ResultSet with the Top Selling items - Ophir
     public static ResultSet getTopSellingItems(Date date, int max) throws SQLException
@@ -1024,6 +1034,65 @@ public class Transactions {
    
     
    
+ // changes the sell price after a shipment the delivery of the order (ie. Purchase) - Jomat
+    private static void updatePriceItem(BigDecimal upc, BigDecimal sellPrice) throws SQLException
+    {
+        String sql = "UPDATE Item SET sellPrice = " + sellPrice + " WHERE upc = " + upc;
+        try
+        {           
+            System.out.println(sql);
+            Statement stmt = dbConn.createStatement();
+            stmt.executeUpdate(sql);
+            dbConn.commit();
+            stmt.close();
+        }
+        catch(SQLException ex)
+        {
+            dbConn.rollback();
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
+    
+    
+    // get the Store Name - Ophir
+    public static String getStore(int receiptId) throws SQLException
+    {
+         String sql = "SELECT name from Purchase WHERE receiptid= '" + receiptId + "'";
+         try
+         {
+             Statement stmt = dbConn.createStatement();
+             ResultSet dbResult = stmt.executeQuery(sql);
+             System.out.println(sql);
+             dbConn.commit();
+             dbResult.next();
+             return dbResult.getString("name");
+         }
+         catch(SQLException ex)
+         {
+             throw ex;
+         }
+    }
+
+    // get the Price of UPC - Ophir
+    public static double getPrice(BigDecimal upc) throws SQLException
+    {
+         String sql = "SELECT sellPrice from Item WHERE upc= '" + upc + "'";
+         try
+         {
+             Statement stmt = dbConn.createStatement();
+             ResultSet dbResult = stmt.executeQuery(sql);
+             System.out.println(sql);
+             dbConn.commit();
+             dbResult.next();
+             return dbResult.getDouble("sellPrice");
+         }
+         catch(SQLException ex)
+         {
+             throw ex;
+         }
+    }
+
 
        
 // # # #   MAIN   # # #  ///
