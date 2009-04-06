@@ -788,6 +788,9 @@ public class Transactions {
             ps.executeUpdate();
             dbConn.commit();
             ps.close();
+            
+            insertItemIntoStored(upc);
+            
             return true;
         }
         catch(SQLException ex)
@@ -1194,14 +1197,14 @@ public class Transactions {
          {
              Statement stmt1 = dbConn.createStatement();
              ResultSet dbResult1 = stmt1.executeQuery(sql1);
-             System.out.println(sql1);
+             //System.out.println(sql1);
              dbResult1.next();
              int numStores = dbResult1.getInt("numStores");
-             System.out.println("numStores: " + numStores);
+             //System.out.println("numStores: " + numStores);
              
              Statement stmt2 = dbConn.createStatement();
              ResultSet dbResult2 = stmt2.executeQuery(sql2);
-             System.out.println(sql2);
+             //System.out.println(sql2);
              String nameStore = null;
              
              Statement stmt3 = dbConn.createStatement(); 
@@ -1215,18 +1218,18 @@ public class Transactions {
                  
                  dbResult2.next();
                  nameStore = dbResult2.getString("name");
-                 System.out.println(nameStore);
+                 //System.out.println(nameStore);
                  
                  sql3 = "SELECT COUNT(*) AS numStoreUPC FROM Stored WHERE name = '" + nameStore +"' AND upc = " + upc;
-                 System.out.println(sql3);
-                 dbResult3 = stmt1.executeQuery(sql3);
+                 //System.out.println(sql3);
+                 dbResult3 = stmt3.executeQuery(sql3);
                  dbResult3.next();
                  
                  if  ( dbResult3.getInt("numStoreUPC") == 0 )
                  {
                      ps4.setString(1, nameStore);
                      ps4.setBigDecimal(2, upc);
-                     System.out.println(sql4);
+                     //System.out.println(sql4);
                      ps4.executeUpdate();
                      
                  }
