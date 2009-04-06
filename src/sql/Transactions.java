@@ -1179,6 +1179,69 @@ public class Transactions {
             throw ex;
         }
    }
+    
+  
+    // insert item into Stored of Items created
+    public static void insertItemIntoStored(BigDecimal upc) throws SQLException
+    {         
+         String sql1 = "SELECT COUNT(*) AS numStores FROM Store";
+         String sql2 = "SELECT name FROM STORE";
+         String sql3 = null;
+         String sql4 = "INSERT INTO Stored VALUES(?, ?, 0)" ;
+     
+     
+         try
+         {
+             Statement stmt1 = dbConn.createStatement();
+             ResultSet dbResult1 = stmt1.executeQuery(sql1);
+             System.out.println(sql1);
+             dbResult1.next();
+             int numStores = dbResult1.getInt("numStores");
+             System.out.println("numStores: " + numStores);
+             
+             Statement stmt2 = dbConn.createStatement();
+             ResultSet dbResult2 = stmt2.executeQuery(sql2);
+             System.out.println(sql2);
+             String nameStore = null;
+             
+             Statement stmt3 = dbConn.createStatement(); 
+             ResultSet dbResult3 = null;
+                              
+             PreparedStatement ps4 = dbConn.prepareStatement(sql4);               
+                         
+             
+             for (int i = 0; i < numStores; i++)
+             {
+                 
+                 dbResult2.next();
+                 nameStore = dbResult2.getString("name");
+                 System.out.println(nameStore);
+                 
+                 sql3 = "SELECT COUNT(*) AS numStoreUPC FROM Stored WHERE name = '" + nameStore +"' AND upc = " + upc;
+                 System.out.println(sql3);
+                 dbResult3 = stmt1.executeQuery(sql3);
+                 dbResult3.next();
+                 
+                 if  ( dbResult3.getInt("numStoreUPC") == 0 )
+                 {
+                     ps4.setString(1, nameStore);
+                     ps4.setBigDecimal(2, upc);
+                     System.out.println(sql4);
+                     ps4.executeUpdate();
+                     
+                 }
+              }
+             
+             dbConn.commit();
+         }
+         catch(SQLException ex)
+         {
+             throw ex;
+         }
+    }
+
+  
+    
        
 // # # #   MAIN   # # #  ///
    
@@ -1188,7 +1251,7 @@ public class Transactions {
         {
             Transactions.connect("ora_b9e6", "a67101063");
             
-            //addItemToPurchase(64, new BigDecimal(33), 1);
+            // addItemToPurchase(64, new BigDecimal(33), 1);
             
             // addItemToShipment(8, new BigDecimal(22), new BigDecimal (50), 4);
             // addItemToShipment(8, new BigDecimal(33), new BigDecimal (40), 10);
