@@ -30,13 +30,12 @@ public class Transactions {
         {
             // try and connect to the DB
             dbConn = DriverManager.getConnection(URL, username, pass);
-            dbConn.setAutoCommit(false);    // to execute queries as transactions.
+            dbConn.setAutoCommit(false);    		// to execute queries as transactions.
             System.out.println("Connected!\n"); 
         }
         catch(SQLException ex)
         {
             printSQLError(ex);
-            ex.printStackTrace();
             throw ex;
         }
     }
@@ -58,7 +57,7 @@ public class Transactions {
         }
         catch(SQLException ex)
         {
-            ex.printStackTrace();
+        	printSQLError(ex);
             throw ex;
         }
     }
@@ -85,7 +84,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
        
@@ -114,7 +113,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
        
@@ -144,7 +143,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -164,7 +163,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            
             throw ex;
         }
 
@@ -194,12 +193,12 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
             {
-                ex.printStackTrace();
+                
                 throw e;
             }
         }
@@ -222,7 +221,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
 
@@ -241,17 +240,12 @@ public class Transactions {
            
             dbResult.next();
            
-            //java.util.Date dateSystem = new java.util.Date(); //long TimeStampSystem = dateSystem.getTime();
             long TimeStampSystem = System.currentTimeMillis();
-            //System.out.println("System Milliseconds:" + TimeStampSystem);
            
             Timestamp SQLDate = dbResult.getTimestamp("dateP");
             long TimeStampSQL = SQLDate.getTime();
-            // System.out.println("SQL Milliseconds :" + TimeStampSQL);
            
             long noDays = (TimeStampSystem - TimeStampSQL);
-           
-            // System.out.println("Days :" + (noDays /  (1000 * 24 * 60 * 60 )) );
            
             stmt.close();
             return (noDays <= (1000 * 24 * 60 * 60 * 15) );
@@ -261,7 +255,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -273,7 +267,6 @@ public class Transactions {
         String sql = "INSERT INTO ReturnP VALUES( returnId_counter.nextval, ?, ?, ?)" ;
         try
         {           
-            // ??? Unsure if this IF statement should use another try & catch clause
             if ( checkReceiptIDReturn( recieptId ) )
             {
                 if ( checkDateReturn( recieptId ) )
@@ -300,7 +293,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
        
@@ -327,7 +320,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -349,7 +342,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
 
@@ -372,7 +365,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
 
@@ -408,7 +401,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -432,17 +425,12 @@ public class Transactions {
                 dbConn.commit();
                 //stmt.close();
                 dbResult.next();
-                //System.out.println(recieptId);
-                //System.out.println(upc);
-                //System.out.println(quantity);
-                //System.out.println(dbResult.getInt("retSum") >= quantity);
-                //System.out.println(dbResult.getInt("retSum"));
                 return ( dbResult.getInt("retSum") >= quantity);   
             }
             catch(SQLException ex)
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
         }
@@ -473,14 +461,12 @@ public class Transactions {
             catch(SQLException ex)
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
        
     }
    
-   
-    //****//
    
     // function to create a shipment (ie insert into Shipment) - Jomat Ok
     public static int insertShipment(String supName, String storeName, Date shipDate) throws SQLException
@@ -500,7 +486,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -521,7 +507,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -542,7 +528,8 @@ public class Transactions {
             }
             else
             {
-                return "WRONG TYPE";
+                System.out.println(" Wrong Type in insertStore");
+            	return "WRONG TYPE";
             }
         }
        
@@ -560,7 +547,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -581,7 +568,8 @@ public class Transactions {
             }
             else
             {
-                return "WRONG STATUS";
+            	System.out.println(" Wrong Status in insertSupplier");
+            	return "WRONG STATUS";
             }
         }
        
@@ -594,13 +582,14 @@ public class Transactions {
             ps.setString(3, city);
             ps.setString(4, status);
             ps.executeUpdate();
+            dbConn.commit();
             ps.close();
             return name;
         }
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -636,7 +625,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -668,7 +657,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -688,11 +677,10 @@ public class Transactions {
         try
         {           
             int tempQuantity = checkQuantity(upc, name) + incrementDecrement;
-            System.out.println(tempQuantity);
+            //System.out.println(tempQuantity);
             if (tempQuantity >= 0)
             {
                 String sql = "UPDATE Stored SET stock = " + tempQuantity + " WHERE name = '" + name + "' AND upc = " + upc;
-                // System.out.println(sql);
                 Statement stmt = dbConn.createStatement();
                 stmt.executeUpdate(sql);
                 dbConn.commit();
@@ -709,7 +697,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -735,7 +723,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -798,7 +786,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -827,7 +815,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -856,7 +844,7 @@ public class Transactions {
             try
             {
                 dbConn.rollback();
-                ex.printStackTrace();
+                printSQLError(ex);
                 throw ex;
             }
             catch(SQLException e)
@@ -867,25 +855,26 @@ public class Transactions {
     }
    
     // deletes an specified supplier - Jomat Ok
-    public static void deleteSupplier(String name) throws SQLException
+    public static int deleteSupplier(String name) throws SQLException
     {
         String sql = "DELETE FROM Supplier WHERE name = '" + name + "'";
         try
         {           
             Statement stmt = dbConn.createStatement();
-            stmt.executeUpdate(sql);
+            int numRows = stmt.executeUpdate(sql);
             dbConn.commit();
             stmt.close();
+            return numRows;
             
         }
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
-   
+
    
     // process the delivery of the order (ie. Purchase) - Jomat Ok
     public static void deliveryOrder(int receiptId, Date deliveredDate) throws SQLException
@@ -893,7 +882,6 @@ public class Transactions {
         String sql = "UPDATE Purchase SET deliveredDate = DATE '" + deliveredDate + "' WHERE receiptId = " + receiptId;
         try
         {           
-            //System.out.println(sql);
             Statement stmt = dbConn.createStatement();
             stmt.executeUpdate(sql);
             dbConn.commit();
@@ -902,7 +890,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -918,14 +906,13 @@ public class Transactions {
         {
                 Statement stmt = dbConn.createStatement();
                 ResultSet dbResult = stmt.executeQuery(sql);
-                //System.out.println(sql);
                 dbConn.commit();
                 return dbResult;
         }
         catch (SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -939,15 +926,13 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            //System.out.println(sql);
             dbConn.commit();
             dbResult.next();
             return (dbResult.getString("password").equals(password));
         }
         catch(SQLException ex)
         {
-//          printSQLError(ex);
-            ex.printStackTrace();
+        	//printSQLError(ex);
             return false;
         }
     }
@@ -961,14 +946,13 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            //System.out.println(sql);
             dbConn.commit();
             dbResult.next();
             return dbResult.getInt("stock");
         }
         catch(SQLException ex)
         {
-            ex.printStackTrace();
+        	printSQLError(ex);
             throw ex;
         }
     }
@@ -981,13 +965,12 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            //System.out.println(sql);
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            ex.printStackTrace();
+        	printSQLError(ex);
             throw ex;
         }
     }
@@ -1004,13 +987,12 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql + "\n\n");
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            System.out.println("ji");
+            System.out.println("getDailyReport Exception");
             printSQLError(ex);
             throw ex;
         }
@@ -1032,14 +1014,12 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            //System.out.println(sql + "\n\n");
             dbConn.commit();
             return dbResult;
         }
         catch(SQLException ex)
         {
-            System.out.println("TopSellingError");
-            ex.printStackTrace();
+            System.out.println("getTopSellingItems Exception");
             printSQLError(ex);
             throw ex;
         }
@@ -1053,7 +1033,6 @@ public class Transactions {
         String sql = "UPDATE Item SET sellPrice = " + sellPrice + " WHERE upc = " + upc;
         try
         {           
-            System.out.println(sql);
             Statement stmt = dbConn.createStatement();
             stmt.executeUpdate(sql);
             //dbConn.commit();
@@ -1062,7 +1041,7 @@ public class Transactions {
         catch(SQLException ex)
         {
             dbConn.rollback();
-            ex.printStackTrace();
+            printSQLError(ex);
             throw ex;
         }
     }
@@ -1076,14 +1055,14 @@ public class Transactions {
          {
              Statement stmt = dbConn.createStatement();
              ResultSet dbResult = stmt.executeQuery(sql);
-             System.out.println(sql);
              //dbConn.commit();
              dbResult.next();
              return dbResult.getString("name");
          }
          catch(SQLException ex)
          {
-             throw ex;
+        	 printSQLError(ex);
+        	 throw ex;
          }
     }
 
@@ -1096,14 +1075,14 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
             //dbConn.commit();
             dbResult.next();
             return dbResult.getString("name");
         }
         catch(SQLException ex)
         {
-            throw ex;
+        	printSQLError(ex);
+        	throw ex;
         }
    }
     
@@ -1115,14 +1094,14 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
             //dbConn.commit();
             dbResult.next();
             return dbResult.getString("name");
         }
         catch(SQLException ex)
         {
-            throw ex;
+        	printSQLError(ex);
+        	throw ex;
         }
    }
     
@@ -1134,7 +1113,6 @@ public class Transactions {
         {
             Statement stmt = dbConn.createStatement();
             ResultSet dbResult = stmt.executeQuery(sql);
-            System.out.println(sql);
             dbConn.commit();
             dbResult.next();
             return ( (int) Math.ceil( dbResult.getDouble("count") / deliveriesPerDay ) );
@@ -1154,7 +1132,6 @@ public class Transactions {
          {
              Statement stmt = dbConn.createStatement();
              ResultSet dbResult = stmt.executeQuery(sql);
-             System.out.println(sql);
              dbConn.commit();
              dbResult.next();
              return dbResult.getDouble("sellPrice");
@@ -1236,6 +1213,10 @@ public class Transactions {
               }
              
              dbConn.commit();
+             stmt1.close();
+             stmt2.close();
+             stmt3.close();
+             ps4.close();
          }
          catch(SQLException ex)
          {
@@ -1254,14 +1235,6 @@ public class Transactions {
         {
             Transactions.connect("ora_b9e6", "a67101063");
             
-            // addItemToPurchase(64, new BigDecimal(33), 1);
-            
-            // addItemToShipment(8, new BigDecimal(22), new BigDecimal (50), 4);
-            // addItemToShipment(8, new BigDecimal(33), new BigDecimal (40), 10);
-            // addItemToReturn(1, new BigDecimal (22), 2);
-            // addItemToReturn(1, new BigDecimal (33), 1);
-            
-                     
             
 /*          Calendar cal = Calendar.getInstance();
             cal.set(2009, 06, 01);
@@ -1290,7 +1263,13 @@ public class Transactions {
              Jomat
              
              addItemToShipment(8 , new BigDecimal (33), new BigDecimal(20), 5);
-             
+             addItemToPurchase(64, new BigDecimal(33), 1);
+            
+             addItemToShipment(8, new BigDecimal(22), new BigDecimal (50), 4);
+             addItemToShipment(8, new BigDecimal(33), new BigDecimal (40), 10);
+             addItemToReturn(1, new BigDecimal (22), 2);
+             addItemToReturn(1, new BigDecimal (33), 1);
+                          
              String a = insertStore("Store X", "12 Address", "STO");
              String b = insertStore("Store Y", "34 Address", "STO");
 
@@ -1317,10 +1296,10 @@ public class Transactions {
              System.out.println( createItem(    new BigDecimal (22), "The Numb 2", "CD", "New Age",
                     "Corp 1", 2009, new BigDecimal (18)));
 
-                System.out.println( createItem(    new BigDecimal (33), "The Numb 3", "DVD", "Pop",
+             System.out.println( createItem(    new BigDecimal (33), "The Numb 3", "DVD", "Pop",
                     "Corp 2", 2000, new BigDecimal (12)));
 
-                System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "BOO", "Pop",
+             System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "BOO", "Pop",
                     "Corp 2", 2000, new BigDecimal (12)));
 
              System.out.println( createItem(    new BigDecimal (44), "The Numb 4", "CD", "Loco",
@@ -1383,7 +1362,8 @@ public class Transactions {
 */
             
             Transactions.closeConnection();
-            System.out.println("Done");
+            System.out.println("Done Transaction");
+            
         }
         catch(Exception ex)
         {
