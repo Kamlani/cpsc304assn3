@@ -10,7 +10,8 @@ import java.util.Vector;
 public class Transactions {
    
     private static Connection dbConn;    // the connection to the database.
-   
+    final static int deliveriesPerDay = 3;
+    
     // method to connect to the database. Throws SQLException if connection is not successful,
     // and class not found exception if driver issue occurs. - Ophir
     public static void connect(String username, String pass) throws SQLException, ClassNotFoundException
@@ -1122,11 +1123,30 @@ public class Transactions {
         }
    }
     
+    // get the days for the deliveryOphir
+    public static int getDaysToDelivery() throws SQLException
+    {
+        String sql = "SELECT count(*) as count FROM Purchase WHERE name='Warehouse' AND deliveredDate IS NULL";
+        try
+        {
+            Statement stmt = dbConn.createStatement();
+            ResultSet dbResult = stmt.executeQuery(sql);
+            System.out.println(sql);
+            dbConn.commit();
+            dbResult.next();
+            return ( (int) Math.ceil( dbResult.getDouble("count") / deliveriesPerDay ) );
+        }
+        catch(SQLException ex)
+        {
+            throw ex;
+        }
+    }
+
     
     // get the Price of UPC - Ophir
     public static double getPrice(BigDecimal upc) throws SQLException
     {
-         String sql = "SELECT sellPrice from Item WHERE upc= '" + upc + "'";
+         String sql = "SELECT sellPrice FROM Item WHERE upc= '" + upc + "'";
          try
          {
              Statement stmt = dbConn.createStatement();
@@ -1142,7 +1162,23 @@ public class Transactions {
          }
     }
 
-
+    // get the name of the Item - Jose
+    public static String getTitleItem ( BigDecimal upc ) throws SQLException
+    {
+        String sql = "SELECT title FROM Item WHERE upc = '" + upc + "'";
+        try
+        {
+            Statement stmt = dbConn.createStatement();
+            ResultSet dbResult = stmt.executeQuery(sql);
+            dbConn.commit();
+            dbResult.next();
+            return dbResult.getString("title");
+        }
+        catch(SQLException ex)
+        {
+            throw ex;
+        }
+   }
        
 // # # #   MAIN   # # #  ///
    
