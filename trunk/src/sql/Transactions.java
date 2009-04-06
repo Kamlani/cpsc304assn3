@@ -1189,7 +1189,7 @@ public class Transactions {
              
              addItemToShipment(8 , new BigDecimal (33), new BigDecimal(20), 5);
              
-             String a = insertStore("Store X", "12 Address", "ONL");
+             String a = insertStore("Store X", "12 Address", "STO");
              String b = insertStore("Store Y", "34 Address", "STO");
 
              String c = insertSupplier("Sup 1", "56 Ave", "Vanc", "Y");
